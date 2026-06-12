@@ -1,0 +1,13 @@
+.featured-title-font {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-motion,
+  .featured-motion * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
