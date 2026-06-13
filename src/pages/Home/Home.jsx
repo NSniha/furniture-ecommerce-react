@@ -6,10 +6,11 @@ import NewArrivals from "../../components/NewArrivals/NewArrivals";
 import FeaturedProduct from "../../components/FeaturedProduct/FeaturedProduct";
 import WorkProcess from "../../components/WorkProcess/WorkProcess";
 import Testimonials from "../../components/Testimonials/Testimonials";
+import Partners from "../../components/Partners/Partners";
 
 const Home = () => {
   return (
-    <main className="w-full overflow-x-hidden bg-[#111111]">
+    <main className="w-full overflow-x-hidden bg-[#ffffff]">
       <Hero />
       <AboutIntro />
       <KeyMetrics />
@@ -18,6 +19,7 @@ const Home = () => {
       <FeaturedProduct />
       <WorkProcess />
       <Testimonials />
+      <Partners />
     </main>
   );
 };
