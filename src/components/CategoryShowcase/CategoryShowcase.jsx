@@ -101,8 +101,11 @@ const CategoryShowcase = () => {
       ref={sectionRef}
       className="w-full overflow-hidden bg-[#f3f0e8] py-[48px] sm:py-[56px] md:py-[66px] xl:py-[82px] 2xl:py-[82px]"
     >
-      <div className="mx-auto w-[calc(100%_-_28px)] max-w-[420px] sm:w-[calc(100%_-_32px)] sm:max-w-[680px] md:w-[calc(100%_-_56px)] md:max-w-[920px] xl:w-[calc(100%_-_96px)] xl:max-w-[1380px]">
-        {/* Top Label */}
+      {/* ==================== Shared section container ==================== */}
+
+      <div className="site-container">
+        {/* ==================== Section labels ==================== */}
+
         <div
           className={`mb-[30px] flex items-center justify-between transition-all duration-[800ms] ease-out sm:mb-[34px] xl:mb-[42px] ${topReveal}`}
         >
@@ -115,9 +118,11 @@ const CategoryShowcase = () => {
           </p>
         </div>
 
-        {/* Main Content */}
+        {/* ==================== Category showcase content ==================== */}
+
         <div className="grid grid-cols-1 items-center gap-[42px] xl:grid-cols-[0.98fr_0.92fr] xl:gap-11">
-          {/* Image Area */}
+          {/* ==================== Active category image ==================== */}
+
           <div
             className={`transition-all delay-[120ms] duration-[900ms] ease-out ${imageReveal}`}
           >
@@ -135,7 +140,8 @@ const CategoryShowcase = () => {
             </div>
           </div>
 
-          {/* List Area */}
+          {/* ==================== Category navigation ==================== */}
+
           <div
             className={`relative flex min-h-0 items-start pt-[6px] transition-all delay-[220ms] duration-[900ms] ease-out xl:min-h-[780px] xl:items-center xl:pt-0 2xl:min-h-[840px] ${listReveal}`}
           >
@@ -148,18 +154,20 @@ const CategoryShowcase = () => {
                     type="button"
                     key={item.id}
                     onClick={() => setActiveIndex(index)}
-                    className={`group mb-4 flex w-full cursor-pointer items-center justify-between gap-4 border-0 bg-transparent p-0 text-left font-sans text-[30px] font-medium uppercase leading-[1.5] tracking-[-0.055em] outline-0 transition duration-300 last:mb-0 hover:translate-x-1 hover:text-[#111111] sm:mb-[18px] sm:text-[clamp(30px,9vw,42px)] md:mb-[22px] md:w-fit md:gap-7 md:text-[clamp(36px,6vw,50px)] xl:mb-6 xl:text-[clamp(30px,2.35vw,40px)] 2xl:mb-7 ${
+                    className={`group mb-4 flex w-fit max-w-full cursor-pointer items-center justify-start gap-[10px] border-0 bg-transparent p-0 text-left font-sans text-[30px] font-medium uppercase leading-[1.5] tracking-[-0.055em] outline-0 transition duration-300 last:mb-0 hover:translate-x-1 hover:text-[#111111] sm:mb-[18px] sm:gap-3 sm:text-[clamp(30px,9vw,42px)] md:mb-[22px] md:gap-7 md:text-[clamp(36px,6vw,50px)] xl:mb-6 xl:text-[clamp(30px,2.35vw,40px)] 2xl:mb-7 ${
                       isActive ? "text-[#111111]" : "text-[#666666]"
                     }`}
                   >
-                    <span className="relative inline-block">
+                    <span className="relative inline-block text-3xl font-medium leading-12 tracking-[-0.02em] text-[#444343] max-[768px]:text-[22px] max-[480px]:text-[20px]">
                       {item.title}
 
                       <span
-                        className={`absolute left-0 bottom-[3px] h-[2px] bg-current transition-all duration-300 xl:bottom-[5px] ${
-                          isActive ? "w-full" : "w-0 group-hover:w-full"
+                        className={`absolute bottom-[3px] left-0 h-[2px] bg-current transition-all duration-300 xl:bottom-[5px] ${
+                          isActive
+                            ? "w-full"
+                            : "w-0 group-hover:w-full"
                         }`}
-                      ></span>
+                      />
                     </span>
 
                     {isActive && (
@@ -173,6 +181,8 @@ const CategoryShowcase = () => {
                 );
               })}
             </div>
+
+            {/* ==================== Active category counter ==================== */}
 
             <div className="mt-[26px] text-[15px] font-semibold leading-none tracking-[-0.025em] text-[#5e5e5e] md:absolute md:right-0 md:top-3 md:mt-0 xl:top-[125px] 2xl:top-[145px]">
               {String(activeCategory.id).padStart(3, "0")}/008

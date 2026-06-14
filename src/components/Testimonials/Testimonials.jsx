@@ -69,6 +69,8 @@ const Testimonials = () => {
 
   const activeTestimonial = testimonials[activeIndex];
 
+  /* ==================== Section reveal observer ==================== */
+
   useEffect(() => {
     const section = sectionRef.current;
 
@@ -81,13 +83,17 @@ const Testimonials = () => {
           observer.unobserve(section);
         }
       },
-      { threshold: 0.16 }
+      {
+        threshold: 0.16,
+      }
     );
 
     observer.observe(section);
 
     return () => observer.disconnect();
   }, []);
+
+  /* ==================== Automatic testimonial slider ==================== */
 
   useEffect(() => {
     if (!visible || isPaused) return;
@@ -102,6 +108,8 @@ const Testimonials = () => {
 
     return () => window.clearTimeout(timer);
   }, [activeIndex, visible, isPaused]);
+
+  /* ==================== Slider navigation ==================== */
 
   const handleNext = () => {
     setDirection("next");
@@ -123,7 +131,12 @@ const Testimonials = () => {
   };
 
   const handleBlur = (event) => {
-    if (!event.currentTarget.contains(event.relatedTarget)) {
+    const nextFocusedElement = event.relatedTarget;
+
+    if (
+      !nextFocusedElement ||
+      !event.currentTarget.contains(nextFocusedElement)
+    ) {
       setIsPaused(false);
     }
   };
@@ -140,19 +153,22 @@ const Testimonials = () => {
       ref={sectionRef}
       className={`testimonials-section ${sectionReveal}`}
     >
-      <div className="testimonials-container">
-        {/* Top Labels */}
+      <div className="site-container">
+        {/* ==================== Section labels ==================== */}
+
         <div className="testimonials-top">
           <p>//06</p>
           <p>/Testimonials</p>
         </div>
 
-        {/* Section Title */}
+        {/* ==================== Section heading ==================== */}
+
         <div className="testimonials-heading">
           <h2>what our customers say</h2>
         </div>
 
-        {/* Testimonial Slider */}
+        {/* ==================== Testimonial slider ==================== */}
+
         <div
           className="testimonials-slider"
           onMouseEnter={() => setIsPaused(true)}
@@ -160,7 +176,8 @@ const Testimonials = () => {
           onFocusCapture={() => setIsPaused(true)}
           onBlurCapture={handleBlur}
         >
-          {/* Image */}
+          {/* ==================== Customer image ==================== */}
+
           <div className="testimonials-image-wrap">
             <div
               key={`image-${activeTestimonial.id}-${direction}`}
@@ -177,7 +194,8 @@ const Testimonials = () => {
             </div>
           </div>
 
-          {/* Content */}
+          {/* ==================== Testimonial content ==================== */}
+
           <div className="testimonials-content">
             <div
               key={`content-${activeTestimonial.id}-${direction}`}
@@ -208,7 +226,8 @@ const Testimonials = () => {
               </p>
             </div>
 
-            {/* Bottom Controls */}
+            {/* ==================== Slider controls ==================== */}
+
             <div className="testimonials-bottom">
               <div className="testimonials-arrows">
                 <button

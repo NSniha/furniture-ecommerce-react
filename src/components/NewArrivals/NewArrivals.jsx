@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import productOne from "../../assets/images/new-arrival-1.jpg";
 import productTwo from "../../assets/images/new-arrival-2.jpg";
@@ -67,11 +68,17 @@ const NewArrivals = () => {
 
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [activeCard, setActiveCard] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
 
+  const mobilePage = Math.min(2, Math.floor(activeCard / 2));
+
+  /* ==================== Section reveal observer ==================== */
+
   useEffect(() => {
     const section = sectionRef.current;
+
     if (!section) return;
 
     const observer = new IntersectionObserver(
@@ -81,7 +88,9 @@ const NewArrivals = () => {
           observer.unobserve(section);
         }
       },
-      { threshold: 0.2 }
+      {
+        threshold: 0.2,
+      }
     );
 
     observer.observe(section);
@@ -89,42 +98,97 @@ const NewArrivals = () => {
     return () => observer.disconnect();
   }, []);
 
+  /* ==================== Slider measurements ==================== */
+
+  const getCardStep = () => {
+    const slider = sliderRef.current;
+
+    if (!slider) return 320;
+
+    const card = slider.querySelector(".arrival-card");
+
+    if (!card) return 320;
+
+    const sliderStyle = window.getComputedStyle(slider);
+
+    const sliderGap =
+      Number.parseFloat(sliderStyle.columnGap || sliderStyle.gap) || 0;
+
+    return card.getBoundingClientRect().width + sliderGap;
+  };
+
   const updateSliderState = () => {
     const slider = sliderRef.current;
+
     if (!slider) return;
 
     const maxScroll = slider.scrollWidth - slider.clientWidth;
-    const current = slider.scrollLeft;
+    const currentScroll = slider.scrollLeft;
+    const cardStep = getCardStep();
 
-    setProgress(maxScroll <= 0 ? 100 : (current / maxScroll) * 100);
-    setCanPrev(current > 5);
-    setCanNext(current < maxScroll - 5);
+    const nextActiveCard = Math.min(
+      products.length - 1,
+      Math.max(0, Math.round(currentScroll / cardStep))
+    );
+
+    setProgress(
+      maxScroll <= 0 ? 100 : (currentScroll / maxScroll) * 100
+    );
+
+    setActiveCard(nextActiveCard);
+    setCanPrev(currentScroll > 5);
+    setCanNext(currentScroll < maxScroll - 5);
   };
 
   useEffect(() => {
-    updateSliderState();
-
     const slider = sliderRef.current;
+
     if (!slider) return;
 
-    slider.addEventListener("scroll", updateSliderState);
+    const frameId = window.requestAnimationFrame(updateSliderState);
+
+    slider.addEventListener("scroll", updateSliderState, {
+      passive: true,
+    });
+
     window.addEventListener("resize", updateSliderState);
 
     return () => {
+      window.cancelAnimationFrame(frameId);
+
       slider.removeEventListener("scroll", updateSliderState);
       window.removeEventListener("resize", updateSliderState);
     };
   }, []);
 
+  /* ==================== Slider navigation ==================== */
+
   const handleSlide = (direction) => {
     const slider = sliderRef.current;
+
     if (!slider) return;
 
-    const card = slider.querySelector(".arrival-card");
-    const cardWidth = card ? card.offsetWidth + 24 : 320;
+    const cardStep = getCardStep();
 
     slider.scrollBy({
-      left: direction === "next" ? cardWidth : -cardWidth,
+      left: direction === "next" ? cardStep : -cardStep,
+      behavior: "smooth",
+    });
+  };
+
+  const handleMobilePage = (pageIndex) => {
+    const slider = sliderRef.current;
+
+    if (!slider) return;
+
+    const targetIndex = pageIndex * 2;
+    const cards = slider.querySelectorAll(".arrival-card");
+    const targetCard = cards[targetIndex];
+
+    if (!targetCard) return;
+
+    slider.scrollTo({
+      left: targetCard.offsetLeft,
       behavior: "smooth",
     });
   };
@@ -132,62 +196,132 @@ const NewArrivals = () => {
   return (
     <section
       ref={sectionRef}
-      className={`arrivals-section ${visible ? "arrivals-visible" : ""}`}
+      className="arrivals-section w-full overflow-hidden bg-[#f8f8f6] pb-[92px] pt-[82px] max-[1280px]:pb-[86px] max-[1280px]:pt-[76px] max-[1024px]:pb-[78px] max-[1024px]:pt-[66px] max-[768px]:pb-[70px] max-[768px]:pt-[56px] max-[480px]:pb-[62px] max-[480px]:pt-12"
     >
-      <div className="arrivals-container">
-        <div className="arrivals-top">
-          <p>//04</p>
-          <p>/New Arrivals</p>
+      <div className="site-container">
+        {/* ==================== Section labels ==================== */}
+
+        <div
+          className={`arrivals-reveal mb-[58px] flex items-center justify-between transition-all duration-[800ms] ease-out max-[1024px]:mb-[46px] max-[768px]:mb-9 ${
+            visible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-6 opacity-0"
+          }`}
+        >
+          <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
+            //04
+          </p>
+
+          <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
+            /New Arrivals
+          </p>
         </div>
 
-        <div className="arrivals-heading-row">
-          <h2>fresh finds just in</h2>
+        {/* ==================== Section heading ==================== */}
 
-          <a href="#" className="arrivals-view-btn">
+        <div className="mb-[72px] flex items-center justify-between gap-10 max-[1024px]:mb-14 max-[1024px]:items-start max-[768px]:mb-11 max-[768px]:flex-col max-[768px]:gap-7">
+          <h2
+            className={`arrivals-reveal m-0 font-['Playfair_Display',serif] text-[clamp(64px,5.5vw,92px)] font-normal lowercase italic leading-[0.95] tracking-[-0.058em] text-[#111111] transition-all delay-[120ms] duration-[850ms] ease-out max-[768px]:text-[clamp(48px,14vw,68px)] max-[768px]:leading-none max-[480px]:text-[46px] ${
+              visible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-7 opacity-0"
+            }`}
+          >
+            fresh finds just in
+          </h2>
+
+          <Link
+            to="/shop"
+            className={`arrivals-reveal inline-flex h-[54px] w-fit shrink-0 items-center gap-[22px] rounded-[3px] border border-[#5d5d5d] bg-transparent px-6 font-['Inter',sans-serif] text-[15px] font-medium uppercase leading-none tracking-[-0.01em] text-[#151515] no-underline transition-all delay-[220ms] duration-300 hover:border-[#151515] hover:bg-[#151515] hover:text-white max-[768px]:h-[50px] max-[768px]:gap-[18px] max-[768px]:px-5 max-[768px]:text-[13px] ${
+              visible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-7 opacity-0"
+            }`}
+          >
             <span>See All Products</span>
+
             <ArrowRight size={25} strokeWidth={1.55} />
-          </a>
+          </Link>
         </div>
 
-        <div className="arrivals-slider-wrap">
-          <div className="arrivals-slider" ref={sliderRef}>
+        {/* ==================== Product slider ==================== */}
+
+        <div
+          className={`arrivals-reveal w-[calc(100%+((100vw-100%)/2))] overflow-visible transition-all delay-300 duration-[900ms] ease-out min-[1401px]:w-full min-[1401px]:overflow-hidden ${
+            visible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-[34px] opacity-0"
+          }`}
+        >
+          <div
+            ref={sliderRef}
+            className="arrivals-slider flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-hidden scroll-smooth pb-1 max-[480px]:gap-4"
+          >
             {products.map((product, index) => (
-              <article className="arrival-card" key={product.id}>
-                <div className="arrival-count">
+              <Link
+                key={product.id}
+                to={`/shop-details/${product.id}`}
+                aria-label={`View ${product.title} details`}
+                className="arrival-card group block flex-[0_0_270px] snap-start text-inherit no-underline max-[1280px]:flex-[0_0_255px] max-[1024px]:flex-[0_0_250px] max-[768px]:flex-[0_0_245px] max-[480px]:flex-[0_0_78%]"
+              >
+                <div className="mb-3 font-['Inter',sans-serif] text-[14px] font-medium leading-none tracking-[-0.035em] text-[#5e5e5e] max-[480px]:mb-4 max-[480px]:text-[17px] max-[480px]:font-semibold">
                   //{String(index + 1).padStart(3, "0")}
                 </div>
 
-                <div className="arrival-image">
-                  <img src={product.image} alt={product.title} />
+                <div className="h-[326px] w-full overflow-hidden bg-[#e3ded4] max-[1280px]:h-[306px] max-[1024px]:h-[300px] max-[768px]:h-[292px] max-[480px]:h-[340px] max-[420px]:h-[320px]">
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="block h-full w-full object-cover object-center transition-transform duration-[1100ms] ease-out group-hover:scale-[1.045]"
+                  />
                 </div>
 
-                <div className="arrival-info">
-                  <p className="arrival-category">{product.category}</p>
+                <div className="pt-[26px] max-[768px]:pt-[22px] max-[480px]:pt-7">
+                  <p className="mb-[14px] mt-0 font-['Inter',sans-serif] text-[16.5px] font-semibold leading-none tracking-[-0.035em] text-[#74746f] max-[480px]:text-[15px]">
+                    {product.category}
+                  </p>
 
-                  <h3>{product.title}</h3>
+                  <h3 className="mb-[22px] mt-0 w-fit font-['Inter',sans-serif] text-[15.5px] font-semibold uppercase leading-[1.2] tracking-[-0.035em] text-[#151515] underline decoration-[1.5px] underline-offset-[3px] max-[480px]:text-[15px]">
+                    {product.title}
+                  </h3>
 
-                  <div className="arrival-price-row">
+                  <div className="flex items-center gap-[18px]">
                     {product.oldPrice && (
-                      <span className="arrival-old-price">
+                      <span className="font-['Inter',sans-serif] text-[19px] font-normal leading-none tracking-[-0.03em] text-[#c7c7c4] line-through max-[480px]:text-[18px]">
                         {product.oldPrice}
                       </span>
                     )}
 
-                    <span className="arrival-price">{product.price}</span>
+                    <span className="font-['Inter',sans-serif] text-[19px] font-medium leading-none tracking-[-0.03em] text-[#151515] max-[480px]:text-[18px]">
+                      {product.price}
+                    </span>
                   </div>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </div>
 
-        <div className="arrivals-controls">
-          <div className="arrivals-arrows">
+        {/* ==================== Desktop slider controls ==================== */}
+
+        <div
+          className={`arrivals-reveal mt-[58px] flex items-center gap-7 transition-all delay-[420ms] duration-[850ms] ease-out max-[768px]:mt-[42px] max-[768px]:gap-[18px] max-[480px]:hidden ${
+            visible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-6 opacity-0"
+          }`}
+        >
+          <div className="flex items-center gap-[22px]">
             <button
               type="button"
               onClick={() => handleSlide("prev")}
-              className={!canPrev ? "disabled" : ""}
+              disabled={!canPrev}
               aria-label="Previous product"
+              className={`inline-flex h-6 w-6 items-center justify-center border-0 bg-transparent p-0 transition-transform duration-300 ${
+                canPrev
+                  ? "cursor-pointer text-[#111111] hover:-translate-x-[3px]"
+                  : "cursor-not-allowed text-[#c9c9c6]"
+              }`}
             >
               <ArrowLeft size={25} strokeWidth={1.45} />
             </button>
@@ -195,16 +329,55 @@ const NewArrivals = () => {
             <button
               type="button"
               onClick={() => handleSlide("next")}
-              className={!canNext ? "disabled" : ""}
+              disabled={!canNext}
               aria-label="Next product"
+              className={`inline-flex h-6 w-6 items-center justify-center border-0 bg-transparent p-0 transition-transform duration-300 ${
+                canNext
+                  ? "cursor-pointer text-[#111111] hover:translate-x-[3px]"
+                  : "cursor-not-allowed text-[#c9c9c6]"
+              }`}
             >
               <ArrowRight size={25} strokeWidth={1.45} />
             </button>
           </div>
 
-          <div className="arrivals-progress">
-            <span style={{ width: `${Math.max(progress, 28)}%` }}></span>
+          <div className="relative h-[2px] w-[510px] flex-none overflow-hidden bg-[#cfcfcb] max-[1280px]:w-[460px] max-[1024px]:w-[360px] max-[768px]:w-auto max-[768px]:flex-1">
+            <span
+              className="absolute left-0 top-0 h-full bg-[#151515] transition-[width] duration-300 ease-out"
+              style={{
+                width: `${Math.max(progress, 28)}%`,
+              }}
+            />
           </div>
+        </div>
+
+        {/* ==================== Mobile slide navigation ==================== */}
+
+        <div
+          className={`arrivals-reveal mt-12 hidden items-center justify-center gap-2 transition-all delay-[420ms] duration-[850ms] ease-out max-[480px]:flex ${
+            visible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-6 opacity-0"
+          }`}
+        >
+          {[0, 1, 2].map((pageIndex) => {
+            const isActive = pageIndex === mobilePage;
+
+            return (
+              <button
+                key={pageIndex}
+                type="button"
+                onClick={() => handleMobilePage(pageIndex)}
+                aria-label={`Go to product group ${pageIndex + 1}`}
+                aria-current={isActive ? "true" : undefined}
+                className={`h-[9px] cursor-pointer rounded-full border-0 p-0 transition-all duration-300 ${
+                  isActive
+                    ? "w-8 bg-[#111111]"
+                    : "w-3 bg-[#c9c9c6]"
+                }`}
+              />
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,0 +1,21 @@
+.redesign-title-font {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+@media (max-width: 540px) {
+  .redesign-title-font span:nth-child(2) {
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .redesign-title-font,
+  .redesign-title-font *,
+  .redesign-title-font ~ *,
+  img {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,25 @@
+.footer-brand-text {
+  font-family: "Inter", sans-serif;
+  font-kerning: normal;
+  text-rendering: geometricPrecision;
+}
+
+.footer-email-input:-webkit-autofill,
+.footer-email-input:-webkit-autofill:hover,
+.footer-email-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  transition: background-color 9999s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-brand-text,
+  .footer-brand-text *,
+  .footer-email-input,
+  footer a,
+  footer button,
+  footer svg {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,271 +1,211 @@
 import { useEffect, useState } from "react";
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import heroOne from "../../assets/images/hero-1.jpg";
 import heroTwo from "../../assets/images/hero-2.jpg";
 import heroThree from "../../assets/images/hero-3.jpg";
 
-const navItems = ["HOME", "ABOUT", "SHOP", "CONTACT US"];
-
 const heroSlides = [
   {
     id: 1,
     image: heroOne,
-    titleLineOne: "let your decor tell",
-    titleLineTwo: "a story",
-    text: "Mix textures, colors, and personality with our uniquely expressive home pieces.",
-    buttonText: "Shop the Collection",
+    imagePosition:
+      "object-[50%_center] max-[1180px]:object-[48%_center] max-[900px]:object-[53%_center] max-[640px]:object-[63%_center]",
+    titleLineOne: "beautiful spaces made",
+    titleLineTwo: "to feel personal",
+    mobileTitleLines: ["beautiful spaces", "made to feel", "personal"],
+    text: "Bring warmth, personality, and thoughtful detail into your home with furniture and decor chosen for everyday living.",
+    buttonText: "Discover Collection",
+    buttonPath: "/shop",
   },
   {
     id: 2,
     image: heroTwo,
-    titleLineOne: "warm wood, calm",
-    titleLineTwo: "living",
-    text: "Discover timeless wooden furniture designed to bring softness, comfort, and character into every room.",
+    imagePosition:
+      "object-[50%_center] max-[900px]:object-[55%_center] max-[640px]:object-[61%_center]",
+    titleLineOne: "natural forms for",
+    titleLineTwo: "modern living",
+    mobileTitleLines: ["natural forms", "for modern", "living"],
+    text: "Explore timeless wooden pieces designed to balance natural character, lasting comfort, and modern simplicity.",
     buttonText: "Explore Furniture",
+    buttonPath: "/shop",
   },
   {
     id: 3,
     image: heroThree,
-    titleLineOne: "crafted spaces for",
-    titleLineTwo: "slow living",
-    text: "Create a home that feels natural, balanced, and beautifully personal with our curated wooden collections.",
+    imagePosition:
+      "object-[50%_center] max-[900px]:object-[54%_center] max-[640px]:object-[60%_center]",
+    titleLineOne: "timeless details for",
+    titleLineTwo: "slower days",
+    mobileTitleLines: ["timeless details", "for slower", "days"],
+    text: "Create a calmer home with beautifully curated pieces that make daily moments feel softer and more meaningful.",
     buttonText: "View New Arrivals",
+    buttonPath: "/shop",
   },
 ];
 
 const Hero = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
 
   const currentSlide = heroSlides[activeSlide];
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    const timer = window.setInterval(() => {
+      setActiveSlide((currentIndex) => {
+        return (currentIndex + 1) % heroSlides.length;
+      });
     }, 5200);
 
-    return () => clearInterval(timer);
+    return () => window.clearInterval(timer);
   }, []);
 
+  const handleSlideChange = (index) => {
+    setActiveSlide(index);
+  };
+
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-[#73583d] text-white">
-      {/* Background Slider */}
+    <section className="relative h-[108svh] min-h-[800px] max-h-[1120px] w-full overflow-hidden bg-[#73583d] text-white max-[900px]:h-[102svh] max-[900px]:min-h-[740px] max-[640px]:h-[100svh] max-[640px]:min-h-[700px] max-[640px]:max-h-none max-[420px]:min-h-[680px]">
+      {/* ==================== Background slides ==================== */}
       <div className="absolute inset-0 overflow-hidden">
-        {heroSlides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-[1400ms] ease-out ${
-              index === activeSlide
-                ? "scale-[1.01] opacity-100"
-                : "scale-[1.055] opacity-0"
-            }`}
-            style={{ backgroundImage: `url(${slide.image})` }}
-          />
-        ))}
+        {heroSlides.map((slide, index) => {
+          const isActive = index === activeSlide;
+
+          return (
+            <div
+              key={slide.id}
+              aria-hidden={!isActive}
+              className={`absolute inset-0 transition-all duration-[1400ms] ease-out ${
+                isActive
+                  ? "scale-[1.01] opacity-100"
+                  : "scale-[1.055] opacity-0"
+              }`}
+            >
+              <img
+                src={slide.image}
+                alt=""
+                className={`block h-full w-full object-cover ${slide.imagePosition}`}
+              />
+            </div>
+          );
+        })}
       </div>
 
-      {/* Dark Brown Overlay */}
+      {/* ==================== Visual overlay layers ==================== */}
       <div className="hero-premium-overlay pointer-events-none absolute inset-0 z-[1]" />
       <div className="hero-soft-vignette pointer-events-none absolute inset-0 z-[2]" />
       <div className="hero-bottom-fade pointer-events-none absolute inset-0 z-[3]" />
 
-      {/* Navbar */}
-      <header className="fixed left-0 top-0 z-50 w-full">
-        <div className="site-container flex h-[82px] items-center justify-between lg:h-[92px]">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-3 text-white no-underline">
-            <span className="relative block h-[30px] w-[32px] overflow-hidden bg-white sm:h-[32px] sm:w-[34px]">
-              <span className="absolute right-[-2px] top-1/2 z-[2] h-[24px] w-[24px] -translate-y-1/2 rounded-full bg-[#6d5138] sm:h-[27px] sm:w-[27px]" />
-            </span>
-
-            <span className="logo-font text-[26px] font-medium leading-none tracking-[-0.04em] sm:text-[32px] lg:text-[26px]">
-              DECORIST
-            </span>
-          </a>
-
-          {/* Desktop Menu */}
-          <div className="hidden items-center gap-9 lg:flex xl:gap-11">
-            <nav className="flex items-center gap-8 xl:gap-10">
-              {navItems.map((item, index) => (
-                <a
-                  key={item}
-                  href="#"
-                  className={`group relative text-[14px] font-semibold tracking-[0.015em] no-underline transition-colors duration-300 xl:text-[15px] ${
-                    index === 0
-                      ? "text-white"
-                      : "text-white/62 hover:text-white"
-                  }`}
-                >
-                  {item}
-
-                  <span
-                    className={`absolute -bottom-2 left-0 h-px bg-white transition-all duration-300 ${
-                      index === 0 ? "w-full" : "w-0 group-hover:w-full"
-                    }`}
-                  />
-                </a>
-              ))}
-            </nav>
-
-            <div className="h-[34px] w-px bg-white/40" />
-
-            <div className="flex items-center gap-7">
-              <button
-                type="button"
-                aria-label="Search"
-                className="inline-flex items-center justify-center border-0 bg-transparent p-0 text-white transition duration-300 hover:-translate-y-0.5 hover:text-white/80"
-              >
-                <Search size={27} strokeWidth={1.65} />
-              </button>
-
-              <button
-                type="button"
-                aria-label="Cart"
-                className="inline-flex items-center justify-center border-0 bg-transparent p-0 text-white transition duration-300 hover:-translate-y-0.5 hover:text-white/80"
-              >
-                <ShoppingCart size={28} strokeWidth={1.65} />
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 p-0 text-white backdrop-blur-md transition hover:bg-white/15 lg:hidden"
-          >
-            <Menu size={24} />
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile Menu */}
-      <div
-        className={`fixed inset-0 z-[100] transition duration-300 lg:hidden ${
-          menuOpen ? "visible opacity-100" : "invisible opacity-0"
-        }`}
-      >
-        <button
-          type="button"
-          aria-label="Close menu backdrop"
-          onClick={() => setMenuOpen(false)}
-          className="absolute inset-0 border-0 bg-black/60 p-0 backdrop-blur-md"
-        />
-
-        <aside
-          className={`absolute right-0 top-0 h-full w-[84%] max-w-[360px] bg-[#4b3322] px-7 py-8 text-white shadow-2xl transition duration-500 ${
-            menuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={() => setMenuOpen(false)}
-            aria-label="Close menu"
-            className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 p-0 text-white transition hover:bg-white/15"
-          >
-            <X size={22} />
-          </button>
-
-          <div className="mb-12 flex items-center gap-3">
-            <span className="relative block h-[30px] w-[32px] overflow-hidden bg-white">
-              <span className="absolute right-[-2px] top-1/2 z-[2] h-[24px] w-[24px] -translate-y-1/2 rounded-full bg-[#4b3322]" />
-            </span>
-
-            <span className="logo-font text-[25px] font-medium tracking-[-0.04em]">
-              DECORIST
-            </span>
-          </div>
-
-          <nav className="flex flex-col gap-2">
-            {navItems.map((item, index) => (
-              <a
-                href="#"
-                key={item}
-                onClick={() => setMenuOpen(false)}
-                className={`rounded-2xl px-4 py-4 text-[15px] font-semibold tracking-[0.04em] no-underline transition ${
-                  index === 0
-                    ? "bg-white/12 text-white"
-                    : "text-white/72 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
-
-          <div className="mt-8 flex gap-4">
-            <button
-              type="button"
-              aria-label="Search"
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/10 p-0 text-white transition hover:bg-white/15"
-            >
-              <Search size={21} />
-            </button>
-
-            <button
-              type="button"
-              aria-label="Cart"
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/10 p-0 text-white transition hover:bg-white/15"
-            >
-              <ShoppingCart size={22} />
-            </button>
-          </div>
-        </aside>
-      </div>
-
-      {/* Hero Content */}
-      <div className="site-container relative z-10 min-h-screen">
-        {/* Heading */}
+      {/* ==================== Shared hero content container ==================== */}
+      <div className="site-container relative z-10 h-full">
+        {/* Desktop and tablet heading */}
         <div
-          key={`heading-${activeSlide}`}
-          className="animate-fade-up-soft absolute left-1/2 top-[17%] w-full max-w-[650px] -translate-x-1/2 text-center md:top-[18%] md:max-w-[720px] lg:left-auto lg:right-0 lg:top-[20.5%] lg:max-w-[780px] lg:translate-x-0 lg:text-left"
+          key={`desktop-heading-${activeSlide}`}
+          className="animate-fade-up-soft absolute right-[-1.5%] top-[18%] w-full max-w-[900px] text-left max-[1440px]:right-[-1%] max-[1440px]:max-w-[800px] max-[1180px]:right-0 max-[1180px]:max-w-[720px] max-[900px]:left-1/2 max-[900px]:right-auto max-[900px]:top-[17%] max-[900px]:max-w-[720px] max-[900px]:-translate-x-1/2 max-[900px]:text-center max-[640px]:hidden"
         >
-          <h1 className="hero-heading-font text-[42px] font-normal lowercase leading-[1.04] tracking-[-0.035em] text-white sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[94px]">
+          <h1 className="hero-heading-font m-0 text-[100px] font-normal lowercase leading-[1.04] tracking-[-0.04em] text-white max-[1440px]:text-[90px] max-[1180px]:text-[78px] max-[900px]:text-[68px]">
             {currentSlide.titleLineOne}
-            <br />
-            <span className="block pt-3 sm:pt-4 lg:pt-5">
+
+            <span className="block pt-4 max-[900px]:pt-3">
               {currentSlide.titleLineTwo}
             </span>
           </h1>
         </div>
 
-        {/* Bottom Left Content */}
+        {/* ==================== Desktop and tablet supporting content ==================== */}
         <div
-          key={`content-${activeSlide}`}
-          className="animate-fade-left-soft absolute bottom-[44px] left-0 max-w-[300px] sm:bottom-[56px] sm:max-w-[350px] md:max-w-[380px] lg:bottom-[72px] lg:max-w-[400px]"
+          key={`desktop-content-${activeSlide}`}
+          className="animate-fade-left-soft absolute bottom-[100px] left-0 w-full max-w-[430px] max-[1400px]:bottom-[82px] max-[1400px]:max-w-[400px] max-[1180px]:bottom-[68px] max-[1180px]:max-w-[380px] max-[900px]:bottom-[54px] max-[900px]:max-w-[350px] max-[640px]:hidden"
         >
-          <p className="mb-6 text-[14.5px] font-normal leading-[1.62] tracking-[-0.005em] text-white/90 sm:text-[16px] md:text-[18px] lg:mb-8 lg:text-[19px]">
+          <p className="section-copy-large m-0 text-white/95">
             {currentSlide.text}
           </p>
 
-          <a
-            href="#"
-            className="group inline-flex h-[50px] items-center gap-4 rounded-[3px] bg-white/95 px-5 text-[11.5px] font-bold uppercase tracking-[0.01em] text-[#151515] no-underline shadow-[0_16px_38px_rgba(0,0,0,0.12)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_22px_52px_rgba(0,0,0,0.16)] sm:h-[56px] sm:px-6 sm:text-[13px] md:h-[60px] md:px-7 md:text-[14px] lg:h-[64px] lg:text-[15px]"
+          <Link
+            to={currentSlide.buttonPath}
+            className="group mt-8 inline-flex h-[66px] items-center justify-center gap-[22px] rounded-[3px] bg-white px-[28px] text-[15px] font-semibold uppercase leading-none tracking-[-0.01em] text-[#151515] no-underline shadow-[0_16px_38px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(0,0,0,0.16)] max-[1180px]:mt-7 max-[1180px]:h-[60px] max-[1180px]:px-6 max-[1180px]:text-[14px] max-[900px]:h-[56px] max-[900px]:gap-[18px] max-[900px]:text-[13px]"
           >
             <span>{currentSlide.buttonText}</span>
-            <span className="text-[25px] font-light leading-none transition duration-300 group-hover:translate-x-1 sm:text-[27px] lg:text-[30px]">
+
+            <span className="text-[30px] font-light leading-none transition-transform duration-300 group-hover:translate-x-1 max-[900px]:text-[27px]">
               →
             </span>
-          </a>
+          </Link>
         </div>
 
-        {/* Slider Dots */}
-        <div className="absolute bottom-[52px] right-0 z-20 hidden items-center gap-2 sm:flex lg:bottom-[92px]">
-          {heroSlides.map((slide, index) => (
-            <button
-              key={slide.id}
-              type="button"
-              onClick={() => setActiveSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-              className={`h-2 rounded-full border-0 p-0 transition-all duration-300 hover:scale-110 ${
-                index === activeSlide
-                  ? "w-[22px] bg-white"
-                  : "w-2 bg-white/45 hover:bg-white/80"
-              }`}
-            />
-          ))}
+        {/* ==================== Desktop and tablet slide navigation ==================== */}
+        <div className="absolute bottom-[108px] right-0 z-20 flex items-center gap-[7px] max-[1400px]:bottom-[90px] max-[1180px]:bottom-[78px] max-[900px]:bottom-[64px] max-[640px]:hidden">
+          {heroSlides.map((slide, index) => {
+            const isActive = index === activeSlide;
+
+            return (
+              <button
+                key={slide.id}
+                type="button"
+                onClick={() => handleSlideChange(index)}
+                aria-label={`Go to slide ${index + 1}`}
+                aria-current={isActive ? "true" : undefined}
+                className={`h-[7px] cursor-pointer rounded-full border-0 p-0 transition-all duration-300 hover:scale-110 ${
+                  isActive
+                    ? "w-[20px] bg-white"
+                    : "w-[7px] bg-white/45 hover:bg-white/80"
+                }`}
+              />
+            );
+          })}
+        </div>
+
+        {/* ==================== Mobile hero content ==================== */}
+        <div
+          key={`mobile-content-${activeSlide}`}
+          className="animate-fade-up-soft absolute inset-x-0 top-[118px] hidden flex-col items-center text-center max-[640px]:flex max-[480px]:top-[132px] max-[420px]:top-[130px]"
+        >
+          <h1 className="hero-heading-font m-0 w-full max-w-[365px] text-[clamp(48px,13vw,56px)] font-normal lowercase leading-[1.20] tracking-[-0.045em] text-white max-[480px]:max-w-[345px] max-[420px]:max-w-[320px] max-[420px]:text-[clamp(43px,12.5vw,49px)]">
+            {currentSlide.mobileTitleLines.map((line, index) => (
+              <span
+                key={`${line}-${index}`}
+                className="block"
+              >
+                {line}
+              </span>
+            ))}
+          </h1>
+
+          <p className="m-0 max-w-[350px] px-2 pt-[36px] text-[16px] font-normal leading-[1.58] tracking-[-0.015em] text-white/95 max-[480px]:max-w-[330px] max-[480px]:pt-8 max-[420px]:max-w-[305px] max-[420px]:pt-7 max-[420px]:text-[15px] max-[420px]:leading-[1.55]">
+            {currentSlide.text}
+          </p>
+
+          <Link
+            to={currentSlide.buttonPath}
+            className="group mt-9 inline-flex h-[58px] w-full max-w-[250px] items-center justify-between rounded-[3px] bg-white px-6 text-[15px] font-semibold uppercase leading-none tracking-[-0.01em] text-[#151515] no-underline shadow-[0_16px_38px_rgba(0,0,0,0.12)] transition-all duration-300 active:scale-[0.98] max-[480px]:mt-8 max-[480px]:max-w-[250px] max-[420px]:h-[54px] max-[420px]:max-w-[230px] max-[420px]:px-5 max-[420px]:text-[13px]"
+          >
+            <span>{currentSlide.buttonText}</span>
+
+            <span className="text-[27px] font-light leading-none max-[420px]:text-[24px]">
+              →
+            </span>
+          </Link>
+        </div>
+
+        {/* ==================== Mobile slide navigation ==================== */}
+        <div className="absolute bottom-[34px] left-1/2 z-20 hidden -translate-x-1/2 items-center justify-center gap-2 max-[640px]:flex max-[480px]:bottom-[30px] max-[420px]:bottom-[26px]">
+          {heroSlides.map((slide, index) => {
+            const isActive = index === activeSlide;
+
+            return (
+              <button
+                key={slide.id}
+                type="button"
+                onClick={() => handleSlideChange(index)}
+                aria-label={`Go to slide ${index + 1}`}
+                aria-current={isActive ? "true" : undefined}
+                className={`h-[7px] cursor-pointer rounded-full border-0 p-0 transition-all duration-300 ${
+                  isActive
+                    ? "w-[30px] bg-white"
+                    : "w-[8px] bg-white/45"
+                }`}
+              />
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,0 +1,21 @@
+/* ==================== Latest news heading font ==================== */
+
+.latest-news-title-font {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ==================== Reduced motion support ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .latest-news-motion,
+  .latest-news-motion *,
+  .latest-news-motion *::before,
+  .latest-news-motion *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

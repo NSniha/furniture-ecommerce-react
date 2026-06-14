@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+
 import aboutImage from "../../assets/images/about-decor.jpg";
 import "./AboutIntro.css";
 
@@ -30,92 +32,105 @@ const AboutIntro = () => {
   }, []);
 
   const revealClass = isVisible
-    ? "opacity-100 translate-y-0"
-    : "opacity-0 translate-y-10";
+    ? "translate-y-0 opacity-100"
+    : "translate-y-10 opacity-0";
 
   return (
     <section
       ref={sectionRef}
-      className="w-full overflow-hidden bg-[#f8f8f6] py-[54px] sm:py-[68px] lg:py-[88px] xl:py-[100px]"
+      className="w-full overflow-hidden bg-[#f8f8f6] py-[100px] max-[1180px]:py-[88px] max-[900px]:py-[68px] max-[640px]:py-[54px]"
     >
+      {/* ==================== Shared section container ==================== */}
+
       <div className="site-container">
-        {/* Top Small Text */}
+        {/* ==================== Section labels ==================== */}
+
         <div
           className={`flex items-center justify-between transition-all duration-700 ease-out ${revealClass}`}
         >
-          <p className="m-0 text-[14px] font-normal leading-none tracking-[-0.02em] text-[#5d5d5d] sm:text-[15px] lg:text-[17px]">
+          <p className="m-0 text-[17px] font-normal leading-none tracking-[-0.02em] text-[#5d5d5d] max-[900px]:text-[15px] max-[640px]:text-[14px]">
             //01
           </p>
 
-          <p className="m-0 text-[14px] font-normal leading-none tracking-[-0.02em] text-[#5d5d5d] sm:text-[15px] lg:text-[17px]">
-            /Introduction
+          <p className="m-0 text-[17px] font-normal leading-none tracking-[-0.02em] text-[#5d5d5d] max-[900px]:text-[15px] max-[640px]:text-[14px]">
+            /Our Story
           </p>
         </div>
 
-        {/* Heading Area */}
-        <div className="mt-[38px] grid grid-cols-1 gap-8 md:mt-[48px] lg:mt-[58px] lg:grid-cols-2 lg:gap-16 xl:gap-20">
+        {/* ==================== Introduction heading ==================== */}
+
+        <div className="mt-[58px] grid grid-cols-[0.95fr_1.05fr] items-start gap-[100px] max-[1180px]:gap-[70px] max-[900px]:mt-[48px] max-[900px]:grid-cols-1 max-[900px]:gap-8 max-[640px]:mt-[38px]">
           <div
             className={`transition-all duration-700 ease-out ${revealClass}`}
-            style={{ transitionDelay: "120ms" }}
+            style={{
+              transitionDelay: "120ms",
+            }}
           >
-            <h2 className="about-display-font m-0 text-[48px] font-normal lowercase leading-[0.98] tracking-[-0.055em] text-[#121212] sm:text-[62px] md:text-[76px] lg:text-[82px] xl:text-[92px]">
-              about decorist.
+            <h2 className="about-display-font m-0 text-[92px] font-normal lowercase leading-[0.98] tracking-[-0.055em] text-[#121212] max-[1440px]:text-[84px] max-[1180px]:text-[74px] max-[900px]:text-[68px] max-[640px]:text-[52px] max-[420px]:text-[46px]">
+              about decorist
             </h2>
           </div>
 
           <div
-            className={`transition-all duration-700 ease-out lg:pt-[104px] ${revealClass}`}
-            style={{ transitionDelay: "220ms" }}
+            className={`pt-[104px] transition-all duration-700 ease-out max-[1180px]:pt-[86px] max-[900px]:pt-0 ${revealClass}`}
+            style={{
+              transitionDelay: "220ms",
+            }}
           >
-            <h3 className="m-0 max-w-[620px] text-[28px] font-normal uppercase leading-[1.2] tracking-[-0.045em] text-[#5f5f5f] sm:text-[34px] md:text-[40px] lg:text-[43px] xl:text-[49px]">
-              Your one-stop destination
+            <h3 className="m-0 max-w-[700px] text-[46px] font-normal uppercase leading-[1.2] tracking-[-0.045em] text-[#5f5f5f] max-[1440px]:text-[38px] max-[1180px]:text-[38px] max-[900px]:text-[36px] max-[640px]:text-[26px] max-[420px]:text-[24px]">
+              Thoughtful interiors
               <br />
-              for all things home decor.
+              shaped around real life.
             </h3>
           </div>
         </div>
 
-        {/* Bottom Content */}
-        <div className="mt-[40px] grid grid-cols-1 items-end gap-10 md:mt-[48px] lg:grid-cols-[1.05fr_0.8fr] lg:gap-20 xl:gap-[150px]">
-          {/* Image */}
+        {/* ==================== Image and supporting content ==================== */}
+
+        <div className="mt-[50px] grid grid-cols-[1.08fr_0.72fr] items-end gap-[150px] max-[1440px]:gap-[110px] max-[1180px]:gap-[76px] max-[900px]:mt-[48px] max-[900px]:grid-cols-1 max-[900px]:gap-10 max-[640px]:mt-10">
           <div
-            className={`about-image-card h-[260px] w-full overflow-hidden bg-[#e7e3dd] transition-all duration-700 ease-out sm:h-[330px] md:h-[430px] lg:h-[405px] ${revealClass}`}
-            style={{ transitionDelay: "320ms" }}
+            className={`about-image-card h-[460px] w-full overflow-hidden bg-[#e7e3dd] transition-all duration-700 ease-out max-[1440px]:h-[430px] max-[1180px]:h-[390px] max-[900px]:h-[430px] max-[640px]:h-[330px] max-[420px]:h-[270px] ${revealClass}`}
+            style={{
+              transitionDelay: "320ms",
+            }}
           >
             <img
               src={aboutImage}
               alt="Modern home decor interior"
-              className="h-full w-full object-cover object-center"
+              className="block h-full w-full object-cover object-center"
             />
           </div>
 
-          {/* Text */}
           <div
-            className={`max-w-full pb-0 transition-all duration-700 ease-out lg:max-w-[455px] lg:pb-[72px] ${revealClass}`}
-            style={{ transitionDelay: "420ms" }}
+            className={`w-full max-w-[500px] pb-[72px] transition-all duration-700 ease-out max-[1180px]:pb-[46px] max-[900px]:max-w-[680px] max-[900px]:pb-0 ${revealClass}`}
+            style={{
+              transitionDelay: "420ms",
+            }}
           >
-            <p className="m-0 mb-5 text-[15px] font-normal leading-[1.6] tracking-[-0.02em] text-[#686868] sm:text-[16px] lg:text-[17.5px]">
-              Whether you're redecorating a cozy apartment or styling your dream
-              home, our curated selection of modern and classic pieces is
-              designed to reflect your personality and elevate your space.
+            <p className="mb-5 mt-0 text-[17.5px] font-normal leading-[1.6] tracking-[-0.02em] text-[#686868] max-[1180px]:text-[16px] max-[640px]:text-[15px]">
+              At Decorist, we believe a beautiful home should feel natural,
+              personal, and easy to live in. Every piece is selected to bring
+              warmth, balance, and lasting character into your space.
             </p>
 
-            <p className="m-0 mb-8 text-[15px] font-normal leading-[1.6] tracking-[-0.02em] text-[#686868] sm:text-[16px] lg:mb-[42px] lg:text-[17.5px]">
-              We blend style, comfort, and quality to help you create interiors
-              that inspire every day.
+            <p className="mb-[42px] mt-0 text-[17.5px] font-normal leading-[1.6] tracking-[-0.02em] text-[#686868] max-[1180px]:mb-9 max-[1180px]:text-[16px] max-[640px]:mb-8 max-[640px]:text-[15px]">
+              From timeless furniture to expressive finishing touches, our
+              collections help you create rooms that feel considered without
+              ever feeling overdone.
             </p>
 
-            <a
-              href="#"
-              className="group inline-flex h-[48px] min-w-[145px] items-center justify-center gap-[18px] rounded-[3px] border border-[#5a5a5a] bg-transparent px-5 text-[13px] font-medium uppercase leading-none tracking-[-0.01em] text-[#171717] no-underline transition duration-300 hover:-translate-y-1 hover:border-[#171717] hover:bg-[#171717] hover:text-white sm:h-[50px] sm:px-[22px] sm:text-[14px] lg:h-[52px] lg:min-w-[154px] lg:px-6 lg:text-[16px]"
+            <Link
+              to="/about"
+              className="group inline-flex h-[52px] min-w-[154px] items-center justify-center gap-[18px] rounded-[3px] border border-[#5a5a5a] bg-transparent px-6 text-[16px] font-medium uppercase leading-none tracking-[-0.01em] text-[#171717] no-underline transition-all duration-300 hover:-translate-y-1 hover:border-[#171717] hover:bg-[#171717] hover:text-white max-[900px]:h-[50px] max-[900px]:px-[22px] max-[900px]:text-[14px] max-[640px]:h-[48px] max-[640px]:min-w-[145px] max-[640px]:px-5 max-[640px]:text-[13px]"
             >
-              <span>About Us</span>
+              <span>Our Story</span>
+
               <ArrowRight
                 size={25}
                 strokeWidth={1.7}
-                className="transition duration-300 group-hover:translate-x-1"
+                className="transition-transform duration-300 group-hover:translate-x-1"
               />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

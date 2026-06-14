@@ -1,30 +1,31 @@
 import { useEffect, useRef, useState } from "react";
+
 import "./WorkProcess.css";
 
 const processSteps = [
   {
     id: 1,
-    title: "Browse Our Curated Designs",
+    title: "Browse Our Curated Collection",
     description:
-      "Discover a curated collection of designs for every taste and lifestyle. Whether you prefer modern, classic, or eclectic styles, find the perfect pieces to suit your personality and elevate your space.",
+      "Explore thoughtfully selected furniture and decor designed for different rooms, styles, and everyday needs. Discover pieces that feel personal, practical, and beautifully considered.",
   },
   {
     id: 2,
-    title: "Choose Your Perfect Pieces",
+    title: "Select The Right Pieces",
     description:
-      "Explore materials, finishes, dimensions, and thoughtful details to select furniture and decor that perfectly complement your space and personal style.",
+      "Compare materials, finishes, dimensions, and design details to choose pieces that complement your space, lifestyle, and personal taste.",
   },
   {
     id: 3,
-    title: "Confirm Your Order",
+    title: "Review And Confirm",
     description:
-      "Review your selected products, confirm the required details, and complete your purchase through a simple and secure checkout experience.",
+      "Check your selected products, confirm the necessary information, and complete your purchase through a clear and secure checkout experience.",
   },
   {
     id: 4,
-    title: "Delivery To Your Space",
+    title: "Delivered To Your Home",
     description:
-      "Your carefully selected pieces are prepared, dispatched, and delivered with attention to detail, ensuring a smooth experience from our store to your home.",
+      "Your order is carefully prepared, dispatched, and delivered with attention at every step, creating a smooth experience from our collection to your space.",
   },
 ];
 
@@ -43,6 +44,8 @@ const WorkProcess = () => {
 
   const activeStep = processSteps[activeIndex];
 
+  /* ==================== Section reveal observer ==================== */
+
   useEffect(() => {
     const section = sectionRef.current;
 
@@ -55,13 +58,17 @@ const WorkProcess = () => {
           observer.unobserve(section);
         }
       },
-      { threshold: 0.18 }
+      {
+        threshold: 0.18,
+      }
     );
 
     observer.observe(section);
 
     return () => observer.disconnect();
   }, []);
+
+  /* ==================== Automatic tab timer ==================== */
 
   useEffect(() => {
     if (!visible || isPaused) return;
@@ -73,9 +80,9 @@ const WorkProcess = () => {
         progressRef.current = 0;
         setTimerProgress(0);
 
-        setActiveIndex((currentIndex) => {
-          return (currentIndex + 1) % processSteps.length;
-        });
+        setActiveIndex(
+          (currentIndex) => (currentIndex + 1) % processSteps.length
+        );
 
         return;
       }
@@ -86,6 +93,8 @@ const WorkProcess = () => {
 
     return () => window.clearInterval(timer);
   }, [visible, isPaused]);
+
+  /* ==================== Tab navigation ==================== */
 
   const resetTimer = () => {
     progressRef.current = 0;
@@ -142,49 +151,50 @@ const WorkProcess = () => {
 
   const remainingSeconds = Math.max(
     1,
-    Math.ceil(
-      (TAB_DURATION * (1 - timerProgress / 100)) / 1000
-    )
+    Math.ceil((TAB_DURATION * (1 - timerProgress / 100)) / 1000)
   );
 
   const topReveal = visible
-    ? "opacity-100 translate-y-0"
-    : "opacity-0 translate-y-[26px]";
+    ? "translate-y-0 opacity-100"
+    : "translate-y-[26px] opacity-0";
 
   const titleReveal = visible
-    ? "opacity-100 translate-x-0"
-    : "opacity-0 -translate-x-[34px]";
+    ? "translate-x-0 opacity-100"
+    : "-translate-x-[34px] opacity-0";
 
   const processReveal = visible
-    ? "opacity-100 translate-x-0"
-    : "opacity-0 translate-x-[34px]";
+    ? "translate-x-0 opacity-100"
+    : "translate-x-[34px] opacity-0";
 
   return (
     <section
       ref={sectionRef}
       className="w-full overflow-hidden bg-[#f3f0e8] py-[108px] max-[1180px]:py-[88px] max-[900px]:py-[70px] max-[640px]:py-[54px]"
     >
-      <div className="mx-auto w-[min(calc(100%_-_96px),1380px)] max-[1180px]:w-[min(calc(100%_-_72px),1180px)] max-[900px]:w-[min(calc(100%_-_40px),860px)] max-[640px]:w-[min(calc(100%_-_28px),560px)]">
-        {/* Top Labels */}
+      <div className="site-container">
+        {/* ==================== Section labels ==================== */}
+
         <div
-          className={`mb-[52px] flex items-center justify-between transition-all duration-[800ms] ease-out max-[900px]:mb-[46px] max-[640px]:mb-[38px] ${topReveal}`}
+          className={`mb-[64px] flex items-center justify-between transition-all duration-[800ms] ease-out max-[900px]:mb-[48px] max-[640px]:mb-[38px] ${topReveal}`}
         >
-          <p className="m-0 text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[640px]:text-[15px]">
+          <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[640px]:text-[15px]">
             //05
           </p>
 
-          <p className="m-0 text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[640px]:text-[15px]">
+          <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[640px]:text-[15px]">
             /Work Process
           </p>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-[0.92fr_1.08fr] items-start gap-[86px] max-[1180px]:gap-[58px] max-[900px]:grid-cols-1 max-[900px]:gap-[54px] max-[640px]:gap-10">
-          {/* Left Heading */}
+        {/* ==================== Process section content ==================== */}
+
+        <div className="grid grid-cols-[0.88fr_1.12fr] items-start gap-[86px] max-[1280px]:gap-[64px] max-[1024px]:gap-[48px] max-[900px]:grid-cols-1 max-[900px]:gap-[46px] max-[640px]:gap-[34px]">
+          {/* ==================== Section heading ==================== */}
+
           <div
-            className={`pt-[22px] transition-all delay-[120ms] duration-[900ms] ease-out max-[900px]:pt-0 ${titleReveal}`}
+            className={`pt-[20px] transition-all delay-[120ms] duration-[900ms] ease-out max-[900px]:pt-0 ${titleReveal}`}
           >
-            <h2 className="work-process-title-font m-0 max-w-[590px] text-[clamp(68px,5.25vw,88px)] font-normal lowercase leading-[1.38] tracking-[-0.055em] text-[#111111] max-[1180px]:text-[clamp(58px,5.5vw,76px)] max-[900px]:max-w-[700px] max-[900px]:text-[clamp(58px,10vw,78px)] max-[900px]:leading-[1.2] max-[640px]:text-[clamp(46px,14vw,62px)] max-[640px]:leading-[1.16] max-[420px]:text-[44px]">
+            <h2 className="work-process-title-font m-0 max-w-[600px] text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[1.25] tracking-[-0.055em] text-[#111111] max-[1180px]:text-[clamp(58px,5.5vw,76px)] max-[900px]:max-w-[720px] max-[900px]:text-[58px] max-[640px]:max-w-[360px] max-[640px]:text-[46px] max-[640px]:leading-[1.06] max-[420px]:text-[42px]">
               a seamless
               <br />
               experience made
@@ -193,7 +203,8 @@ const WorkProcess = () => {
             </h2>
           </div>
 
-          {/* Process Area */}
+          {/* ==================== Interactive process tabs ==================== */}
+
           <div
             className={`w-full transition-all delay-[220ms] duration-[900ms] ease-out ${processReveal}`}
             onMouseEnter={() => setIsPaused(true)}
@@ -201,11 +212,12 @@ const WorkProcess = () => {
             onFocusCapture={() => setIsPaused(true)}
             onBlurCapture={handleProcessBlur}
           >
-            {/* Tab Numbers */}
+            {/* ==================== Process tab numbers ==================== */}
+
             <div
               role="tablist"
               aria-label="Work process steps"
-              className="grid grid-cols-4 border-b border-[#d8d6d0]"
+              className="grid grid-cols-4 overflow-hidden border border-[#d8d6d0] border-b-0"
             >
               {processSteps.map((step, index) => {
                 const isActive = index === activeIndex;
@@ -220,23 +232,23 @@ const WorkProcess = () => {
                     aria-controls={`work-process-panel-${index}`}
                     tabIndex={isActive ? 0 : -1}
                     onClick={() => handleTabChange(index)}
-                    onKeyDown={(event) =>
-                      handleKeyDown(event, index)
-                    }
-                    className={`group relative flex h-[164px] items-center justify-center overflow-hidden border-0 border-r border-[#d8d6d0] p-0 text-[94px] font-normal leading-none tracking-[-0.065em] outline-none transition-colors duration-500 last:border-r-0 max-[1180px]:h-[146px] max-[1180px]:text-[82px] max-[900px]:h-[130px] max-[900px]:text-[72px] max-[640px]:h-[88px] max-[640px]:text-[48px] max-[420px]:h-[76px] max-[420px]:text-[40px] ${
+                    onKeyDown={(event) => handleKeyDown(event, index)}
+                    className={`group relative flex h-[154px] min-w-0 items-center justify-center overflow-hidden border-0 border-r border-[#d8d6d0] p-0 font-['Inter',sans-serif] outline-none transition-colors duration-500 last:border-r-0 max-[1180px]:h-[138px] max-[1024px]:h-[124px] max-[900px]:h-[118px] max-[640px]:h-[88px] max-[420px]:h-[78px] ${
                       isActive
                         ? "bg-[#817d73] text-white"
                         : "bg-[#f8f8f6] text-[#5e5e5e] hover:bg-[#efede7] hover:text-[#242424]"
                     }`}
                   >
-                    <span className="relative z-10">
+                    <span className="relative z-10 block text-[clamp(54px,5.25vw,78px)] font-normal leading-none tracking-[-0.065em] max-[1180px]:text-[64px] max-[900px]:text-[54px] max-[640px]:text-[38px] max-[420px]:text-[34px]">
                       {String(step.id).padStart(2, "0")}
                     </span>
 
                     {isActive && (
                       <span
-                        className="absolute bottom-0 left-0 z-20 h-[3px] bg-[#e9e5dc] transition-[width] duration-[40ms] ease-linear"
-                        style={{ width: `${timerProgress}%` }}
+                        className="absolute bottom-0 left-0 z-20 h-[3px] bg-[#ede9df] transition-[width] duration-[40ms] ease-linear"
+                        style={{
+                          width: `${timerProgress}%`,
+                        }}
                       />
                     )}
 
@@ -246,41 +258,45 @@ const WorkProcess = () => {
               })}
             </div>
 
-            {/* Active Process Content */}
-            <div className="relative min-h-[374px] overflow-hidden bg-[#f8f8f6] px-[48px] py-[74px] max-[1180px]:min-h-[340px] max-[1180px]:px-10 max-[1180px]:py-[60px] max-[900px]:min-h-[320px] max-[900px]:px-[42px] max-[900px]:py-[58px] max-[640px]:min-h-[310px] max-[640px]:px-6 max-[640px]:py-10">
+            {/* ==================== Active process information ==================== */}
+
+            <div className="relative min-h-[390px] overflow-hidden border border-[#d8d6d0] bg-[#f8f8f6] px-[50px] py-[70px] max-[1180px]:min-h-[360px] max-[1180px]:px-10 max-[1180px]:py-[58px] max-[900px]:min-h-[330px] max-[900px]:px-[42px] max-[900px]:py-[54px] max-[640px]:min-h-[320px] max-[640px]:px-[24px] max-[640px]:py-[36px] max-[420px]:min-h-[306px] max-[420px]:px-5 max-[420px]:py-8">
               <div
                 key={activeStep.id}
                 id={`work-process-panel-${activeIndex}`}
                 role="tabpanel"
                 aria-labelledby={`work-process-tab-${activeIndex}`}
-                className="work-process-panel-animation"
+                aria-live="polite"
+                className="work-process-panel-animation relative z-10"
               >
-                <p className="m-0 text-[15px] font-medium uppercase leading-none tracking-[0.08em] text-[#817d73]">
+                <p className="m-0 font-['Inter',sans-serif] text-[14px] font-medium uppercase leading-none tracking-[0.1em] text-[#817d73] max-[640px]:text-[12px]">
                   Step {String(activeStep.id).padStart(2, "0")}
                 </p>
 
-                <h3 className="mb-0 mt-[28px] text-[36px] font-medium uppercase leading-[1.15] tracking-[-0.045em] text-[#171717] max-[1180px]:text-[32px] max-[640px]:mt-[22px] max-[640px]:text-[25px] max-[420px]:text-[22px]">
+                <h3 className="pt-5 mb-0 mt-[25px] max-w-[590px] font-['Inter',sans-serif] text-[34px] font-medium uppercase leading-[1.16] tracking-[-0.045em] text-[#171717] max-[1180px]:text-[30px] max-[640px]:mt-5 max-[640px]:text-[24px] max-[640px]:leading-[1.2] max-[420px]:text-[21px]">
                   {activeStep.title}
                 </h3>
 
-                <p className="mb-0 mt-[34px] max-w-[650px] text-[19px] font-normal leading-[1.55] tracking-[-0.025em] text-[#78746c] max-[1180px]:text-[18px] max-[640px]:mt-[26px] max-[640px]:text-[16px] max-[640px]:leading-[1.6]">
+                <p className="pt-5 mb-0 mt-[30px] max-w-[640px] font-['Inter',sans-serif] text-[18px] font-normal leading-[1.6] tracking-[-0.02em] text-[#78746c] max-[1180px]:text-[17px] max-[640px]:mt-6 max-[640px]:text-[15px] max-[640px]:leading-[1.65]">
                   {activeStep.description}
                 </p>
               </div>
 
-              {/* Decorative Background Number */}
-              <span className="pointer-events-none absolute bottom-[-28px] right-5 select-none text-[150px] font-normal leading-none tracking-[-0.08em] text-[#817d73]/[0.035] max-[640px]:hidden">
+              {/* ==================== Decorative process number ==================== */}
+
+              <span className="pointer-events-none absolute bottom-[-32px] right-[22px] select-none font-['Inter',sans-serif] text-[154px] font-normal leading-none tracking-[-0.08em] text-[#817d73]/[0.04] max-[640px]:bottom-[-18px] max-[640px]:right-3 max-[640px]:text-[104px]">
                 {String(activeStep.id).padStart(2, "0")}
               </span>
             </div>
 
-            {/* Mobile Timer */}
-            <div className="mt-4 hidden items-center justify-between max-[640px]:flex">
-              <span className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#77736b]">
+            {/* ==================== Mobile timer information ==================== */}
+
+            <div className="mt-4 hidden items-center justify-between border-t border-[#d8d6d0] pt-4 max-[640px]:flex">
+              <span className="font-['Inter',sans-serif] text-[11px] font-medium uppercase tracking-[0.08em] text-[#77736b]">
                 {isPaused ? "Process paused" : "Auto-changing process"}
               </span>
 
-              <span className="text-[12px] font-medium tracking-[0.04em] text-[#77736b]">
+              <span className="font-['Inter',sans-serif] text-[11px] font-medium tracking-[0.04em] text-[#77736b]">
                 {remainingSeconds}s
               </span>
             </div>

@@ -62,6 +62,8 @@ const Partners = () => {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
+  /* ==================== Section reveal observer ==================== */
+
   useEffect(() => {
     const section = sectionRef.current;
 
@@ -74,7 +76,9 @@ const Partners = () => {
           observer.unobserve(section);
         }
       },
-      { threshold: 0.18 }
+      {
+        threshold: 0.18,
+      }
     );
 
     observer.observe(section);
@@ -83,46 +87,49 @@ const Partners = () => {
   }, []);
 
   const topReveal = visible
-    ? "opacity-100 translate-y-0"
-    : "opacity-0 translate-y-6";
+    ? "translate-y-0 opacity-100"
+    : "translate-y-6 opacity-0";
 
   const titleReveal = visible
-    ? "opacity-100 translate-y-0"
-    : "opacity-0 translate-y-8";
+    ? "translate-y-0 opacity-100"
+    : "translate-y-8 opacity-0";
 
   const sliderReveal = visible
-    ? "opacity-100 translate-y-0"
-    : "opacity-0 translate-y-[34px]";
+    ? "translate-y-0 opacity-100"
+    : "translate-y-[34px] opacity-0";
 
   return (
     <section
       ref={sectionRef}
       className="w-full overflow-hidden bg-[#f3f0e8] pb-[122px] pt-[124px] max-[1180px]:pb-[105px] max-[1180px]:pt-[100px] max-[900px]:pb-[88px] max-[900px]:pt-[78px] max-[640px]:pb-[68px] max-[640px]:pt-[58px]"
     >
-      <div className="mx-auto w-[min(calc(100%_-_96px),1708px)] max-[1180px]:w-[min(calc(100%_-_72px),1100px)] max-[900px]:w-[min(calc(100%_-_40px),820px)] max-[640px]:w-[min(calc(100%_-_28px),560px)]">
-        {/* Top Labels */}
+      <div className="site-container">
+        {/* ==================== Section labels ==================== */}
+
         <div
           className={`mb-[78px] flex items-center justify-between transition-all duration-[800ms] ease-out max-[1180px]:mb-[68px] max-[900px]:mb-[54px] max-[640px]:mb-[42px] ${topReveal}`}
         >
-          <p className="m-0 text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[640px]:text-[15px]">
+          <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[640px]:text-[15px]">
             //07
           </p>
 
-          <p className="m-0 text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[640px]:text-[15px]">
+          <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[640px]:text-[15px]">
             /Our Partners
           </p>
         </div>
 
-        {/* Heading */}
+        {/* ==================== Section heading ==================== */}
+
         <div
           className={`mb-[116px] text-center transition-all delay-[100ms] duration-[900ms] ease-out max-[1180px]:mb-[94px] max-[900px]:mb-[72px] max-[640px]:mb-[54px] ${titleReveal}`}
         >
-          <h2 className="partners-title-font m-0 text-[clamp(72px,5.8vw,108px)] font-normal lowercase leading-[0.95] tracking-[-0.055em] text-[#111111] max-[1180px]:text-[clamp(66px,7vw,88px)] max-[900px]:text-[clamp(54px,10vw,76px)] max-[640px]:text-[clamp(44px,13vw,60px)] max-[640px]:leading-none max-[420px]:text-[42px]">
+          <h2 className="partners-title-font m-0 text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[0.95] tracking-[-0.055em] text-[#111111] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[640px]:leading-none max-[420px]:text-[42px]">
             trusted by thousands
           </h2>
         </div>
 
-        {/* Infinite Partners Slider */}
+        {/* ==================== Infinite partners slider ==================== */}
+
         <div
           className={`w-full overflow-hidden transition-all delay-[220ms] duration-[950ms] ease-out ${sliderReveal}`}
         >
