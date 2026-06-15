@@ -1,6 +1,12 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 
 import SiteLayout from "./layouts/SiteLayout";
+
+import PageTitle from "./components/PageTitle/PageTitle";
 
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
@@ -10,24 +16,44 @@ import Contact from "./pages/Contact/Contact";
 
 const App = () => {
   return (
-    <Routes>
-      <Route element={<SiteLayout />}>
-        <Route index element={<Home />} />
+    <>
+      {/* ==================== Dynamic browser page title ==================== */}
 
-        <Route path="about" element={<About />} />
+      <PageTitle />
 
-        <Route path="shop" element={<Shop />} />
+      {/* ==================== Website routes ==================== */}
 
-        <Route
-          path="shop-details/:productId"
-          element={<ShopDetails />}
-        />
+      <Routes>
+        <Route element={<SiteLayout />}>
+          <Route index element={<Home />} />
 
-        <Route path="contact" element={<Contact />} />
+          <Route
+            path="about"
+            element={<About />}
+          />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+          <Route
+            path="shop"
+            element={<Shop />}
+          />
+
+          <Route
+            path="shop-details/:productId"
+            element={<ShopDetails />}
+          />
+
+          <Route
+            path="contact"
+            element={<Contact />}
+          />
+
+          <Route
+            path="*"
+            element={<Navigate to="/" replace />}
+          />
+        </Route>
+      </Routes>
+    </>
   );
 };
 
