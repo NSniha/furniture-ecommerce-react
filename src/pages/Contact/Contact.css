@@ -1,0 +1,54 @@
+/* ==================== Contact page base ==================== */
+
+.contact-page {
+  font-family: "Inter", sans-serif;
+}
+
+/* ==================== Form controls ==================== */
+
+.contact-form-control,
+.contact-form-select {
+  border-radius: 0;
+  transition:
+    border-color 300ms ease,
+    color 300ms ease;
+}
+
+.contact-form-control::placeholder {
+  opacity: 1;
+}
+
+.contact-form-select option {
+  color: #171717;
+  background: #f1eee5;
+}
+
+/* ==================== Browser autofill styling ==================== */
+
+.contact-form-control:-webkit-autofill,
+.contact-form-control:-webkit-autofill:hover,
+.contact-form-control:-webkit-autofill:focus {
+  -webkit-text-fill-color: #171717;
+  box-shadow: 0 0 0 1000px #f1eee5 inset;
+  transition: background-color 9999s ease-out;
+}
+
+/* ==================== FAQ anchor offset ==================== */
+
+.contact-faq-section {
+  scroll-margin-top: 24px;
+}
+
+/* ==================== Reduced motion support ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-page,
+  .contact-page *,
+  .contact-page *::before,
+  .contact-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

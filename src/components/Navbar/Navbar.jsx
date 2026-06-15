@@ -133,7 +133,7 @@ const Navbar = () => {
         className={`left-0 top-0 z-50 w-full ${
           isHomePage
             ? "absolute bg-transparent"
-            : "relative border-b border-black/10 bg-[#fafaf8]"
+            : "relative bg-[#fafaf8]"
         }`}
       >
         <div className="site-container flex h-[104px] items-center justify-between max-[1400px]:h-[94px] max-[1024px]:h-[82px] max-[640px]:h-[76px]">
@@ -363,7 +363,7 @@ const Navbar = () => {
                   key={item.id}
                   to={item.path}
                   onClick={() => setMenuOpen(false)}
-                  className={`group flex items-center justify-between border-b border-white/15 py-5 text-[20px] font-medium uppercase tracking-[-0.015em] no-underline transition-colors duration-300 ${
+                  className={`group flex items-center justify-between border-b border-white/15 py-5 text-[18px] font-medium uppercase tracking-[-0.015em] no-underline transition-colors duration-300 ${
                     isActive
                       ? "text-white"
                       : "text-white/55 hover:text-white"
@@ -443,7 +443,7 @@ const Navbar = () => {
 
           {/* Drawer Description */}
           <div className="mt-auto pt-12">
-            <p className="section-copy-small m-0 text-white/40">
+            <p className="text-[12px] m-0 text-white/65">
               Thoughtfully curated furniture and decor for beautifully personal
               spaces.
             </p>

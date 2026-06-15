@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="260" viewBox="0 0 720 260">
+  <g fill="#8B8B8B" stroke="#8B8B8B">
+    <ellipse cx="270" cy="72" rx="28" ry="54" transform="rotate(-40 270 72)" fill="none" stroke-width="7"/>
+<ellipse cx="312" cy="72" rx="28" ry="54" transform="rotate(-20 312 72)" fill="none" stroke-width="7"/>
+<ellipse cx="360" cy="72" rx="28" ry="54" transform="rotate(0 360 72)" fill="none" stroke-width="7"/>
+<ellipse cx="408" cy="72" rx="28" ry="54" transform="rotate(20 408 72)" fill="none" stroke-width="7"/>
+<ellipse cx="450" cy="72" rx="28" ry="54" transform="rotate(40 450 72)" fill="none" stroke-width="7"/>
+<path d="M245 132 Q360 100 475 132" fill="none" stroke-width="7"/>
+<text x="360" y="208" text-anchor="middle" font-family="Arial, Helvetica, sans-serif"
+      font-size="74" font-weight="700" fill="#8B8B8B" stroke="none">Nilkamal</text>
+  </g>
+</svg>

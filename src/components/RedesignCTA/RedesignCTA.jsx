@@ -60,7 +60,7 @@ const RedesignCTA = () => {
           <div
             className={`flex h-full flex-col items-start justify-center pr-[24px] transition-all duration-[950ms] ease-out max-[1180px]:pr-0 max-[900px]:justify-start ${contentReveal}`}
           >
-            <h2 className="redesign-title-font m-0 max-w-[720px] text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[1.06] tracking-[-0.055em] text-[#111111] max-[900px]:max-w-[700px] max-[900px]:text-[58px] max-[900px]:leading-[1.08] max-[640px]:max-w-[390px] max-[640px]:text-[46px] max-[640px]:leading-[1.08] max-[420px]:text-[42px]">
+            <h2 className="redesign-title-font m-0 max-w-[720px] text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[1.15] tracking-[-0.035em] text-[#111111] max-[900px]:max-w-[700px] max-[900px]:text-[58px] max-[900px]:leading-[1.08] max-[640px]:max-w-[390px] max-[640px]:text-[46px] max-[640px]:leading-[1.08] max-[420px]:text-[42px]">
               <span className="block">ready to</span>
               <span className="block">redesign your</span>
               <span className="block">space?</span>

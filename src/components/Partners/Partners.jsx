@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-import partnerOne from "../../assets/images/partner-1.png";
-import partnerTwo from "../../assets/images/partner-2.png";
-import partnerThree from "../../assets/images/partner-3.png";
-import partnerFour from "../../assets/images/partner-4.png";
-import partnerFive from "../../assets/images/partner-5.png";
+import partnerOne from "../../assets/images/partner-1.svg";
+import partnerTwo from "../../assets/images/partner-2.svg";
+import partnerThree from "../../assets/images/partner-3.svg";
+import partnerFour from "../../assets/images/partner-4.svg";
+import partnerFive from "../../assets/images/partner-5.svg";
 
 import "./Partners.css";
 
@@ -50,7 +50,7 @@ const PartnerGroup = ({ duplicate = false }) => {
           <img
             src={partner.logo}
             alt={duplicate ? "" : partner.name}
-            className="block h-auto max-h-[68px] w-auto max-w-[225px] object-contain opacity-70 grayscale transition-all duration-300 ease-out group-hover:scale-[1.035] group-hover:opacity-100 group-hover:grayscale-0 max-[1180px]:max-h-[60px] max-[1180px]:max-w-[195px] max-[900px]:max-h-[54px] max-[900px]:max-w-[180px] max-[640px]:max-h-12 max-[640px]:max-w-[150px] max-[420px]:max-h-11 max-[420px]:max-w-[138px]"
+            className="block h-auto max-h-[150px] w-auto max-w-[225px] object-contain opacity-70 grayscale transition-all duration-300 ease-out group-hover:scale-[1.035] group-hover:opacity-100 group-hover:grayscale-0 max-[1180px]:max-h-[60px] max-[1180px]:max-w-[195px] max-[900px]:max-h-[54px] max-[900px]:max-w-[180px] max-[640px]:max-h-20 max-[640px]:max-w-[150px] max-[420px]:max-h-11 max-[420px]:max-w-[138px]"
           />
         </div>
       ))}
