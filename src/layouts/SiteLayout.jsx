@@ -1,18 +1,11 @@
 import { Outlet } from "react-router-dom";
 
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
-
 const SiteLayout = () => {
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-x-hidden">
-      <Navbar />
-
-      <main className="w-full flex-1">
+    <div className="min-h-screen w-full">
+      <main className="w-full">
         <Outlet />
       </main>
-
-      <Footer />
     </div>
   );
 };
