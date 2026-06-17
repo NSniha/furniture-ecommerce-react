@@ -12,6 +12,63 @@ import Partners from "../../components/Partners/Partners";
 
 import aboutVisionImage from "../../assets/images/about-vision-room.jpg";
 
+import aboutValuesImage from "../../assets/images/about-values-room.jpg";
+
+import valueDesignIcon from "../../assets/icons/value-design-led.svg";
+import valueCustomerIcon from "../../assets/icons/value-customer-centered.svg";
+import valueQualityIcon from "../../assets/icons/value-quality.svg";
+import valueSustainabilityIcon from "../../assets/icons/value-sustainability.svg";
+import valueCreativeIcon from "../../assets/icons/value-creative.svg";
+import valueCraftsmanshipIcon from "../../assets/icons/value-craftsmanship.svg";
+
+
+/* ==================== About values information ==================== */
+
+const aboutValues = [
+  {
+    id: 1,
+    icon: valueDesignIcon,
+    title: "Design-led Thinking",
+    description:
+      "We put aesthetics and functionality at the core of everything we offer.",
+  },
+  {
+    id: 2,
+    icon: valueCustomerIcon,
+    title: "Customer-centered",
+    description:
+      "Your satisfaction shapes our designs, services, and innovations.",
+  },
+  {
+    id: 3,
+    icon: valueQualityIcon,
+    title: "Quality Always",
+    description:
+      "Every product is handpicked for its materials, craftsmanship, and longevity.",
+  },
+  {
+    id: 4,
+    icon: valueSustainabilityIcon,
+    title: "Sustainability Mindset",
+    description:
+      "We support mindful choices and aim to reduce environmental impact.",
+  },
+  {
+    id: 5,
+    icon: valueCreativeIcon,
+    title: "Creative Freedom",
+    description:
+      "We encourage self-expression and help you bring your vision to life.",
+  },
+  {
+    id: 6,
+    icon: valueCraftsmanshipIcon,
+    title: "Lasting Craftsmanship",
+    description:
+      "Every detail is considered to create pieces that remain beautiful for years.",
+  },
+];
+
 /* ==================== Section reveal hook ==================== */
 
 const useSectionReveal = (threshold = 0.12) => {
@@ -61,6 +118,12 @@ const About = () => {
     sectionRef: visionRef,
     visible: visionVisible,
   } = useSectionReveal(0.1);
+
+  const {
+    sectionRef: valuesRef,
+    visible: valuesVisible,
+  } = useSectionReveal(0.08);
+
 
   return (
     <main className="w-full overflow-hidden bg-[#f8f8f6] text-[#151515]">
@@ -152,6 +215,7 @@ const About = () => {
       </section>
 
       {/* ==================== About introduction section ==================== */}
+
       <section
         id="about-introduction"
         ref={introductionRef}
@@ -289,6 +353,7 @@ const About = () => {
       {/* ==================== About section three ==================== */}
 
       {/* ==================== Vision and mission section ==================== */}
+
       <section
         id="about-vision"
         ref={visionRef}
@@ -409,9 +474,124 @@ const About = () => {
         </div>
       </section>
 
-      {/* ==================== About section four ==================== */}
+      {/* ==================== About values section ==================== */}
+      
+      <section
+        id="about-values"
+        ref={valuesRef}
+        className="w-full scroll-mt-8 bg-[#f8f8f6] pb-[118px] pt-[112px] max-[1400px]:pb-[100px] max-[1400px]:pt-[96px] max-[1024px]:pb-[82px] max-[1024px]:pt-[78px] max-[640px]:pb-[64px] max-[640px]:pt-[62px]"
+      >
+        <div className="site-container">
+          {/* ==================== Values section labels ==================== */}
 
-      {/* Section four code will be added here */}
+          <div
+            className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+              valuesVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[24px] opacity-0"
+            }`}
+          >
+            <p className="section-label">//04</p>
+
+            <p className="section-label">/Value</p>
+          </div>
+
+          {/* ==================== Values heading and description ==================== */}
+
+          <div className="mt-[72px] grid grid-cols-[0.92fr_1.08fr] items-end gap-[104px] max-[1400px]:gap-[76px] max-[1180px]:gap-[56px] max-[900px]:grid-cols-1 max-[900px]:items-start max-[900px]:gap-[38px] max-[640px]:mt-[50px]">
+            <h2
+              className={`about-display-font m-0 max-w-[610px] text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[1.14] tracking-[-0.055em] text-[#151515] transition-all delay-[80ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1024px]:text-[clamp(58px,7vw,70px)] max-[640px]:text-[clamp(44px,12vw,58px)] ${
+                valuesVisible
+                  ? "translate-x-0 opacity-100"
+                  : "-translate-x-[38px] opacity-0"
+              }`}
+            >
+              <span className="block">
+                values we are
+              </span>
+
+              <span className="mt-[14px] block max-[640px]:mt-[8px]">
+                proud of
+              </span>
+            </h2>
+
+            <p
+              className={`section-copy mb-[10px] max-w-[680px] transition-all delay-[150ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[900px]:mb-0 ${
+                valuesVisible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-[32px] opacity-0"
+              }`}
+            >
+              These principles guide how we curate products
+              and create experiences, reflecting our purpose
+              and passion.
+            </p>
+          </div>
+
+          {/* ==================== Values feature image ==================== */}
+
+          <div
+            className={`group relative mt-[56px] aspect-[1747/595] w-full overflow-hidden bg-[#ddd5ca] transition-all delay-[210ms] duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1024px]:aspect-[16/6.5] max-[768px]:aspect-[16/8] max-[640px]:mt-[42px] max-[640px]:aspect-[4/3] ${
+              valuesVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[42px] opacity-0"
+            }`}
+          >
+            <img
+              src={aboutValuesImage}
+              alt="Warm Decorist interior with wooden console, lamp, mirror and indoor plant"
+              className={`h-full w-full object-cover object-center transition-transform duration-[1500ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                valuesVisible
+                  ? "scale-100"
+                  : "scale-[1.045]"
+              }`}
+            />
+
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/[0.015] via-transparent to-black/[0.035]" />
+          </div>
+
+          {/* ==================== Values card grid ==================== */}
+
+          <div className="mt-[72px] grid grid-cols-3 gap-x-0 gap-y-[88px] max-[1180px]:mt-[64px] max-[1024px]:grid-cols-2 max-[1024px]:gap-y-[66px] max-[700px]:grid-cols-1 max-[700px]:gap-y-0 max-[640px]:mt-[52px]">
+            {aboutValues.map((item, index) => (
+              <article
+                key={item.id}
+                style={{
+                  transitionDelay: `${280 + index * 75}ms`,
+                }}
+                className={`min-h-[196px] border-l border-[#d4d4d0] px-[38px] transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1400px]:px-[30px] max-[1180px]:px-[26px] max-[1024px]:min-h-[184px] max-[700px]:min-h-0 max-[700px]:border-b max-[700px]:border-l-0 max-[700px]:px-0 max-[700px]:py-[38px] first:max-[700px]:pt-0 last:max-[700px]:border-b-0 last:max-[700px]:pb-0 ${
+                  valuesVisible
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-[36px] opacity-0"
+                }`}
+              >
+                {/* ==================== Value icon ==================== */}
+
+                <div className="flex h-[64px] items-start max-[640px]:h-[58px]">
+                  <img
+                    src={item.icon}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-[58px] w-[58px] object-contain object-left max-[640px]:h-[52px] max-[640px]:w-[52px]"
+                  />
+                </div>
+
+                {/* ==================== Value title ==================== */}
+
+                <h3 className="m-0 mt-[18px] text-[23px] font-medium uppercase leading-[1.2] tracking-[-0.035em] text-[#151515] max-[1400px]:text-[21px] max-[1180px]:text-[19px] max-[640px]:mt-[14px] max-[640px]:text-[18px]">
+                  {item.title}
+                </h3>
+
+                {/* ==================== Value description ==================== */}
+
+                <p className="section-copy mt-[20px] max-w-[420px] max-[1180px]:mt-[16px]">
+                  {item.description}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ==================== About section five ==================== */}
 
