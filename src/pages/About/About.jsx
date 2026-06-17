@@ -14,12 +14,12 @@ import aboutVisionImage from "../../assets/images/about-vision-room.jpg";
 
 import aboutValuesImage from "../../assets/images/about-values-room.jpg";
 
-import valueDesignIcon from "../../assets/icons/value-design-led.svg";
-import valueCustomerIcon from "../../assets/icons/value-customer-centered.svg";
-import valueQualityIcon from "../../assets/icons/value-quality.svg";
-import valueSustainabilityIcon from "../../assets/icons/value-sustainability.svg";
-import valueCreativeIcon from "../../assets/icons/value-creative.svg";
-import valueCraftsmanshipIcon from "../../assets/icons/value-craftsmanship.svg";
+import valueDesignIcon from "../../assets/images/value-design-led.svg";
+import valueCustomerIcon from "../../assets/images/value-customer-centered.svg";
+import valueQualityIcon from "../../assets/images/value-quality.svg";
+import valueSustainabilityIcon from "../../assets/images/value-sustainability.svg";
+import valueCreativeIcon from "../../assets/images/value-creative.svg";
+import valueCraftsmanshipIcon from "../../assets/images/value-craftsmanship.svg";
 
 
 /* ==================== About values information ==================== */
@@ -475,7 +475,7 @@ const About = () => {
       </section>
 
       {/* ==================== About values section ==================== */}
-      
+
       <section
         id="about-values"
         ref={valuesRef}
