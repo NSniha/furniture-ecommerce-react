@@ -265,7 +265,7 @@ const Contact = () => {
                   : "translate-x-[40px] opacity-0"
               }`}
             >
-              <h2 className="display-serif-font m-0 max-w-[620px] text-[clamp(64px,5.1vw,88px)] font-normal lowercase leading-[1.08] tracking-[-0.055em] text-[#171717] max-[1180px]:text-[clamp(56px,5.5vw,74px)] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[420px]:text-[42px]">
+              <h2 className="display-serif-font m-0 max-w-[620px] text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[1.08] tracking-[-0.055em] text-[#171717] max-[1180px]:text-[clamp(56px,5.5vw,74px)] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[420px]:text-[42px]">
                 <span className="block">
                   your ideas,
                 </span>
@@ -342,7 +342,7 @@ const Contact = () => {
                   : "-translate-x-[38px] opacity-0"
               }`}
             >
-              <h2 className="display-serif-font m-0 max-w-[540px] text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[1.08] tracking-[-0.055em] text-[#171717] max-[1180px]:text-[clamp(58px,5.8vw,78px)] max-[900px]:text-[58px] max-[640px]:max-w-[390px] max-[640px]:text-[46px] max-[420px]:text-[42px]">
+              <h2 className="display-serif-font m-0 max-w-[540px] text-[clamp(66px,5.3vw,78px)] font-normal lowercase leading-[1.08] tracking-[-0.055em] text-[#171717] max-[1180px]:text-[clamp(58px,5.8vw,78px)] max-[900px]:text-[58px] max-[640px]:max-w-[390px] max-[640px]:text-[46px] max-[420px]:text-[42px]">
                 <span className="block">
                   tell us what
                 </span>
@@ -553,7 +553,7 @@ const Contact = () => {
                 : "translate-y-[34px] opacity-0"
             }`}
           >
-            <h2 className="display-serif-font m-0 max-w-[1100px] text-center text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[1.08] tracking-[-0.055em] text-[#171717] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[420px]:text-[42px]">
+            <h2 className="display-serif-font m-0 max-w-[1100px] text-center text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[1.08] tracking-[-0.055em] text-[#171717] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[420px]:text-[42px]">
               a few helpful answers
             </h2>
 

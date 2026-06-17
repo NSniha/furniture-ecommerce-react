@@ -221,7 +221,7 @@ const NewArrivals = () => {
 
         <div className="mb-[72px] flex items-center justify-between gap-10 max-[1024px]:mb-14 max-[1024px]:items-start max-[768px]:mb-11 max-[768px]:flex-col max-[768px]:gap-7">
           <h2
-            className={`arrivals-reveal m-0 font-['Playfair_Display',serif] text-[clamp(64px,5.5vw,92px)] font-normal lowercase italic leading-[0.95] tracking-[-0.058em] text-[#111111] transition-all delay-[120ms] duration-[850ms] ease-out max-[768px]:text-[clamp(48px,14vw,68px)] max-[768px]:leading-none max-[480px]:text-[46px] ${
+            className={`arrivals-reveal m-0 font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-[0.95] tracking-[-0.058em] text-[#111111] transition-all delay-[120ms] duration-[850ms] ease-out max-[768px]:text-[clamp(48px,14vw,68px)] max-[768px]:leading-none max-[480px]:text-[46px] ${
               visible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-7 opacity-0"

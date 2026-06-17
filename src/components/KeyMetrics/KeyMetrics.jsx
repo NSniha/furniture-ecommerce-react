@@ -72,7 +72,7 @@ const KeyMetrics = () => {
               : "translate-y-[30px] opacity-0"
           }`}
         >
-          <h2 className="metrics-title-font m-0 text-[clamp(66px,5.9vw,94px)] font-normal lowercase leading-none tracking-[-0.055em] text-[#131313] max-[900px]:text-[clamp(48px,12vw,72px)] max-[640px]:tracking-[-0.045em]">
+          <h2 className="metrics-title-font m-0 text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-none tracking-[-0.055em] text-[#131313] max-[900px]:text-[clamp(48px,12vw,72px)] max-[640px]:tracking-[-0.045em]">
             our lucky numbers
           </h2>
         </div>

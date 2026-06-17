@@ -101,7 +101,7 @@ const LatestNews = () => {
           {/* ==================== Heading and action ==================== */}
 
           <div className="min-w-0">
-            <h2 className="latest-news-title-font m-0 max-w-[780px] text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[0.95] tracking-[-0.055em] text-[#111111] max-[900px]:max-w-[700px] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[640px]:leading-none max-[420px]:text-[42px]">
+            <h2 className="latest-news-title-font m-0 max-w-[780px] text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[0.95] tracking-[-0.055em] text-[#111111] max-[900px]:max-w-[700px] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[640px]:leading-none max-[420px]:text-[42px]">
               stories for inspired living
             </h2>
 
@@ -165,7 +165,7 @@ const LatestNews = () => {
                 <div className="flex items-start justify-between gap-[30px] max-[640px]:gap-4">
                   <a
                     href="#"
-                    className={`min-w-0 max-w-[650px] font-['Inter',sans-serif] text-[clamp(26px,2.35vw,30px)] font-medium uppercase leading-[1.6] tracking-[-0.045em] text-[#151515] no-underline transition-colors duration-300 hover:text-[#625e58] max-[1180px]:text-[29px] max-[900px]:text-[25px] max-[640px]:text-[22px] max-[640px]:leading-[1.55] max-[420px]:text-[20px] ${
+                    className={`min-w-0 max-w-[650px] font-['Inter',sans-serif] text-[clamp(22px,2.15vw,26px)] font-medium uppercase leading-[1.6] tracking-[-0.045em] text-[#151515] no-underline transition-colors duration-300 hover:text-[#625e58] max-[1180px]:text-[29px] max-[900px]:text-[25px] max-[640px]:text-[22px] max-[640px]:leading-[1.55] max-[420px]:text-[20px] ${
                       item.featured
                         ? "underline decoration-[1.5px] underline-offset-[5px]"
                         : "group-hover:underline group-hover:decoration-[1.5px] group-hover:underline-offset-[5px]"

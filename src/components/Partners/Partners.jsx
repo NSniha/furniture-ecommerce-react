@@ -123,7 +123,7 @@ const Partners = () => {
         <div
           className={`mb-[116px] text-center transition-all delay-[100ms] duration-[900ms] ease-out max-[1180px]:mb-[94px] max-[900px]:mb-[72px] max-[640px]:mb-[54px] ${titleReveal}`}
         >
-          <h2 className="partners-title-font m-0 text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[0.95] tracking-[-0.055em] text-[#111111] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[640px]:leading-none max-[420px]:text-[42px]">
+          <h2 className="partners-title-font m-0 text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[0.95] tracking-[-0.055em] text-[#111111] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[640px]:leading-none max-[420px]:text-[42px]">
             trusted by thousands
           </h2>
         </div>

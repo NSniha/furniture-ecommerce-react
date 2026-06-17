@@ -61,7 +61,7 @@ const FeaturedProduct = () => {
         <div
           className={`mb-[74px] flex flex-col items-center gap-[30px] text-center transition-all duration-[850ms] ease-out max-[1180px]:mb-[62px] max-[900px]:mb-[52px] max-[900px]:gap-6 max-[640px]:mb-10 max-[640px]:gap-5 ${headingReveal}`}
         >
-          <h2 className="featured-title-font m-0 text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[0.95] tracking-[-0.055em] text-[#111111] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[640px]:leading-none max-[420px]:text-[42px]">
+          <h2 className="featured-title-font m-0 text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[0.95] tracking-[-0.055em] text-[#111111] max-[900px]:text-[58px] max-[640px]:text-[46px] max-[640px]:leading-none max-[420px]:text-[42px]">
             the comfort edit
           </h2>
 

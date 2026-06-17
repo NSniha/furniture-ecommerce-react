@@ -66,7 +66,7 @@ const AboutIntro = () => {
               transitionDelay: "120ms",
             }}
           >
-            <h2 className="about-display-font m-0 text-[92px] font-normal lowercase leading-[0.98] tracking-[-0.055em] text-[#121212] max-[1440px]:text-[84px] max-[1180px]:text-[74px] max-[900px]:text-[68px] max-[640px]:text-[52px] max-[420px]:text-[46px]">
+            <h2 className="about-display-font m-0 text-[78px] font-normal lowercase leading-[0.98] tracking-[-0.055em] text-[#121212] max-[1440px]:text-[76px] max-[1180px]:text-[74px] max-[900px]:text-[68px] max-[640px]:text-[52px] max-[420px]:text-[46px]">
               about decorist
             </h2>
           </div>

@@ -194,7 +194,7 @@ const WorkProcess = () => {
           <div
             className={`pt-[20px] transition-all delay-[120ms] duration-[900ms] ease-out max-[900px]:pt-0 ${titleReveal}`}
           >
-            <h2 className="work-process-title-font m-0 max-w-[600px] text-[clamp(68px,5.7vw,94px)] font-normal lowercase leading-[1.25] tracking-[-0.055em] text-[#111111] max-[1180px]:text-[clamp(58px,5.5vw,76px)] max-[900px]:max-w-[720px] max-[900px]:text-[58px] max-[640px]:max-w-[360px] max-[640px]:text-[46px] max-[640px]:leading-[1.06] max-[420px]:text-[42px]">
+            <h2 className="work-process-title-font m-0 max-w-[600px] text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[1.25] tracking-[-0.055em] text-[#111111] max-[1180px]:text-[clamp(58px,5.5vw,76px)] max-[900px]:max-w-[720px] max-[900px]:text-[58px] max-[640px]:max-w-[360px] max-[640px]:text-[46px] max-[640px]:leading-[1.06] max-[420px]:text-[42px]">
               a seamless
               <br />
               experience made
@@ -239,7 +239,7 @@ const WorkProcess = () => {
                         : "bg-[#f8f8f6] text-[#5e5e5e] hover:bg-[#efede7] hover:text-[#242424]"
                     }`}
                   >
-                    <span className="relative z-10 block text-[clamp(54px,5.25vw,78px)] font-normal leading-none tracking-[-0.065em] max-[1180px]:text-[64px] max-[900px]:text-[54px] max-[640px]:text-[38px] max-[420px]:text-[34px]">
+                    <span className="relative z-10 block text-[clamp(50px,4.5vw,60px)] font-normal leading-none tracking-[-0.065em] max-[1180px]:text-[64px] max-[900px]:text-[54px] max-[640px]:text-[38px] max-[420px]:text-[34px]">
                       {String(step.id).padStart(2, "0")}
                     </span>
 
@@ -269,11 +269,11 @@ const WorkProcess = () => {
                 aria-live="polite"
                 className="work-process-panel-animation relative z-10"
               >
-                <p className="m-0 font-['Inter',sans-serif] text-[14px] font-medium uppercase leading-none tracking-[0.1em] text-[#817d73] max-[640px]:text-[12px]">
+                <p className="m-0 font-['Inter',sans-serif] text-[14px]  font-medium uppercase leading-none tracking-[0.1em] text-[#817d73] max-[640px]:text-[12px]">
                   Step {String(activeStep.id).padStart(2, "0")}
                 </p>
 
-                <h3 className="pt-5 mb-0 mt-[25px] max-w-[590px] font-['Inter',sans-serif] text-[34px] font-medium uppercase leading-[1.16] tracking-[-0.045em] text-[#171717] max-[1180px]:text-[30px] max-[640px]:mt-5 max-[640px]:text-[24px] max-[640px]:leading-[1.2] max-[420px]:text-[21px]">
+                <h3 className="pt-5 mb-0 mt-[25px] max-w-[590px] font-['Inter',sans-serif] text-[28px] font-medium uppercase leading-[1.16] tracking-[-0.045em] text-[#171717] max-[1180px]:text-[30px] max-[640px]:mt-5 max-[640px]:text-[24px] max-[640px]:leading-[1.2] max-[420px]:text-[21px]">
                   {activeStep.title}
                 </h3>
 
