@@ -70,6 +70,56 @@ const aboutValues = [
   },
 ];
 
+
+/* ==================== About milestone information ==================== */
+
+const aboutMilestones = [
+  {
+    id: 1,
+    year: "2029",
+    title: "Decorist Was Born",
+    description:
+      "We launched with a small online collection of 100 products for modern apartments and urban homes.",
+    active: true,
+  },
+  {
+    id: 2,
+    year: "2030",
+    title: "First Pop-up Store Opened",
+    description:
+      "We connected with our community in person through our first Decorist pop-up in San Francisco.",
+  },
+  {
+    id: 3,
+    year: "2031",
+    title: "Featured in Top Design Magazines",
+    description:
+      "Our thoughtful collections gained recognition from leading interior and lifestyle publications.",
+  },
+  {
+    id: 4,
+    year: "2032",
+    title: "Sustainable Materials Initiative",
+    description:
+      "We began incorporating recycled and ethically sourced materials into 60% of our product range.",
+  },
+  {
+    id: 5,
+    year: "2033",
+    title: "50,000+ Happy Customers",
+    description:
+      "A major customer milestone that reinforced our commitment to quality, service, and design.",
+  },
+  {
+    id: 6,
+    year: "2034",
+    title: "Global Shipping Launched",
+    description:
+      "Decorist expanded its service worldwide, bringing curated home decor to global customers in over 25 countries.",
+  },
+];
+
+
 /* ==================== Section reveal hook ==================== */
 
 const useSectionReveal = (threshold = 0.12) => {
