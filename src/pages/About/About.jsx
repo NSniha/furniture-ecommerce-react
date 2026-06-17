@@ -10,6 +10,8 @@ import aboutHeroImage from "../../assets/images/about-hero-room.jpg";
 
 import Partners from "../../components/Partners/Partners";
 
+import aboutVisionImage from "../../assets/images/about-vision-room.jpg";
+
 /* ==================== Section reveal hook ==================== */
 
 const useSectionReveal = (threshold = 0.12) => {
@@ -53,6 +55,11 @@ const About = () => {
   const {
     sectionRef: introductionRef,
     visible: introductionVisible,
+  } = useSectionReveal(0.1);
+
+  const {
+    sectionRef: visionRef,
+    visible: visionVisible,
   } = useSectionReveal(0.1);
 
   return (
@@ -145,7 +152,6 @@ const About = () => {
       </section>
 
       {/* ==================== About introduction section ==================== */}
-
       <section
         id="about-introduction"
         ref={introductionRef}
@@ -282,7 +288,126 @@ const About = () => {
 
       {/* ==================== About section three ==================== */}
 
-      {/* Section three code will be added here */}
+      {/* ==================== Vision and mission section ==================== */}
+      <section
+        id="about-vision"
+        ref={visionRef}
+        className="w-full scroll-mt-8 bg-[#f8f8f6] pb-[118px] pt-[112px] max-[1400px]:pb-[100px] max-[1400px]:pt-[96px] max-[1024px]:pb-[82px] max-[1024px]:pt-[78px] max-[640px]:pb-[64px] max-[640px]:pt-[62px]"
+      >
+        <div className="site-container">
+          {/* ==================== Vision section labels ==================== */}
+
+          <div
+            className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+              visionVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[24px] opacity-0"
+            }`}
+          >
+            <p className="section-label">//03</p>
+
+            <p className="section-label">
+              /Vision &amp; Mission
+            </p>
+          </div>
+
+          {/* ==================== Vision heading and image ==================== */}
+
+          <div className="mt-[68px] grid grid-cols-[0.92fr_1.08fr] items-start gap-[104px] max-[1400px]:gap-[76px] max-[1180px]:gap-[56px] max-[900px]:grid-cols-1 max-[900px]:gap-[48px] max-[640px]:mt-[48px] max-[640px]:gap-[38px]">
+            {/* ==================== Vision heading ==================== */}
+
+            <h2
+              className={`about-display-font m-0 max-w-[600px] text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[1.16] tracking-[-0.055em] text-[#151515] transition-all delay-[80ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1024px]:text-[clamp(58px,7vw,70px)] max-[900px]:max-w-[560px] max-[640px]:text-[clamp(44px,12vw,58px)] ${
+                visionVisible
+                  ? "translate-x-0 opacity-100"
+                  : "-translate-x-[38px] opacity-0"
+              }`}
+            >
+              <span className="block">
+                what we truly
+              </span>
+
+              <span className="mt-[14px] block max-[640px]:mt-[8px]">
+                stand for
+              </span>
+            </h2>
+
+            {/* ==================== Vision image ==================== */}
+
+            <div
+              className={`group relative aspect-[649/326] w-full overflow-hidden bg-[#e8e2d8] transition-all delay-[150ms] duration-[1050ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                visionVisible
+                  ? "translate-x-0 opacity-100"
+                  : "translate-x-[42px] opacity-0"
+              }`}
+            >
+              <img
+                src={aboutVisionImage}
+                alt="Minimal warm interior representing Decorist vision and mission"
+                className={`h-full w-full object-cover object-center transition-transform duration-[1500ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                  visionVisible
+                    ? "scale-100"
+                    : "scale-[1.045]"
+                }`}
+              />
+
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.025] via-transparent to-black/[0.025]" />
+            </div>
+          </div>
+
+          {/* ==================== Vision and mission information ==================== */}
+
+          <div className="mt-[82px] max-[1024px]:mt-[68px] max-[640px]:mt-[54px]">
+            {/* ==================== Our vision row ==================== */}
+
+            <article
+              className={`grid grid-cols-[70px_320px_minmax(0,1fr)] items-start gap-x-[62px] border-b border-[#d7d7d3] pb-[76px] transition-all delay-[220ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1400px]:grid-cols-[58px_280px_minmax(0,1fr)] max-[1400px]:gap-x-[46px] max-[1180px]:grid-cols-[48px_240px_minmax(0,1fr)] max-[1180px]:gap-x-[34px] max-[900px]:grid-cols-[44px_minmax(0,1fr)] max-[900px]:gap-x-[28px] max-[900px]:gap-y-[26px] max-[900px]:pb-[58px] max-[640px]:grid-cols-[32px_minmax(0,1fr)] max-[640px]:gap-x-[18px] max-[640px]:pb-[44px] ${
+                visionVisible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-[36px] opacity-0"
+              }`}
+            >
+              <p className="m-0 text-[27px] font-normal leading-none tracking-[-0.035em] text-[#666666] max-[1180px]:text-[23px] max-[640px]:text-[20px]">
+                1
+              </p>
+
+              <h3 className="m-0 text-[39px] font-medium uppercase leading-[1.1] tracking-[-0.045em] text-[#151515] max-[1400px]:text-[35px] max-[1180px]:text-[31px] max-[900px]:text-[28px] max-[640px]:text-[23px]">
+                Our Vision
+              </h3>
+
+              <p className="m-0 max-w-[650px] text-[24px] font-normal leading-[1.48] tracking-[-0.025em] text-[#666666] max-[1400px]:text-[21px] max-[1180px]:text-[19px] max-[900px]:col-start-2 max-[900px]:text-[18px] max-[640px]:text-[15px]">
+                To become the go-to destination for stylish,
+                affordable home decor that makes every space
+                feel special.
+              </p>
+            </article>
+
+            {/* ==================== Our mission row ==================== */}
+
+            <article
+              className={`grid grid-cols-[70px_320px_minmax(0,1fr)] items-start gap-x-[62px] pt-[76px] transition-all delay-[300ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1400px]:grid-cols-[58px_280px_minmax(0,1fr)] max-[1400px]:gap-x-[46px] max-[1180px]:grid-cols-[48px_240px_minmax(0,1fr)] max-[1180px]:gap-x-[34px] max-[900px]:grid-cols-[44px_minmax(0,1fr)] max-[900px]:gap-x-[28px] max-[900px]:gap-y-[26px] max-[900px]:pt-[58px] max-[640px]:grid-cols-[32px_minmax(0,1fr)] max-[640px]:gap-x-[18px] max-[640px]:pt-[44px] ${
+                visionVisible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-[36px] opacity-0"
+              }`}
+            >
+              <p className="m-0 text-[27px] font-normal leading-none tracking-[-0.035em] text-[#666666] max-[1180px]:text-[23px] max-[640px]:text-[20px]">
+                2
+              </p>
+
+              <h3 className="m-0 text-[39px] font-medium uppercase leading-[1.1] tracking-[-0.045em] text-[#151515] max-[1400px]:text-[35px] max-[1180px]:text-[31px] max-[900px]:text-[28px] max-[640px]:text-[23px]">
+                Our Mission
+              </h3>
+
+              <p className="m-0 max-w-[720px] text-[24px] font-normal leading-[1.48] tracking-[-0.025em] text-[#666666] max-[1400px]:text-[21px] max-[1180px]:text-[19px] max-[900px]:col-start-2 max-[900px]:text-[18px] max-[640px]:text-[15px]">
+                To deliver beautifully crafted and thoughtfully
+                designed pieces that help people express their
+                unique style and elevate their homes with ease.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
 
       {/* ==================== About section four ==================== */}
 
