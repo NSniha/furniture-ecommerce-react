@@ -175,6 +175,10 @@ const About = () => {
     visible: valuesVisible,
   } = useSectionReveal(0.08);
 
+  const {
+    sectionRef: milestoneRef,
+    visible: milestoneVisible,
+  } = useSectionReveal(0.06);
 
   return (
     <main className="w-full overflow-hidden bg-[#f8f8f6] text-[#151515]">
@@ -644,9 +648,141 @@ const About = () => {
         </div>
       </section>
 
-      {/* ==================== About section five ==================== */}
+      {/* ==================== About milestone section ==================== */}
 
-      {/* Section five code will be added here */}
+      <section
+        id="about-milestone"
+        ref={milestoneRef}
+        className="w-full scroll-mt-8 bg-[#f1eee5] pb-[118px] pt-[112px] max-[1400px]:pb-[100px] max-[1400px]:pt-[96px] max-[1024px]:pb-[82px] max-[1024px]:pt-[78px] max-[640px]:pb-[64px] max-[640px]:pt-[62px]"
+      >
+        <div className="site-container">
+          {/* ==================== Milestone section labels ==================== */}
+
+          <div
+            className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+              milestoneVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[24px] opacity-0"
+            }`}
+          >
+            <p className="section-label">//05</p>
+
+            <p className="section-label">
+              /Milestone
+            </p>
+          </div>
+
+          {/* ==================== Milestone main content ==================== */}
+
+          <div className="relative mt-[76px] max-[1400px]:mt-[66px] max-[1024px]:mt-[58px] max-[640px]:mt-[48px]">
+            {/* ==================== Milestone heading ==================== */}
+
+            <h2
+              className={`about-display-font m-0 max-w-[650px] text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[1.1] tracking-[-0.055em] text-[#151515] transition-all delay-[80ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1024px]:text-[clamp(58px,7vw,70px)] max-[640px]:text-[clamp(44px,12vw,58px)] ${
+                milestoneVisible
+                  ? "translate-x-0 opacity-100"
+                  : "-translate-x-[38px] opacity-0"
+              }`}
+            >
+              our journey
+            </h2>
+
+            {/* ==================== Milestone introduction ==================== */}
+
+            <p
+              className={`section-copy mt-[32px] max-w-[690px] transition-all delay-[140ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[640px]:mt-[24px] ${
+                milestoneVisible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-[30px] opacity-0"
+              }`}
+            >
+              A timeline of growth, creativity, and commitment
+              to beautiful living.
+            </p>
+
+            {/* ==================== Milestone feature image ==================== */}
+
+            <div
+              className={`absolute right-0 top-[132px] aspect-square w-[420px] overflow-hidden bg-[#d8d1c7] transition-all delay-[190ms] duration-[1050ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1500px]:w-[380px] max-[1400px]:w-[350px] max-[1180px]:relative max-[1180px]:right-auto max-[1180px]:top-auto max-[1180px]:mt-[48px] max-[1180px]:w-full max-[1180px]:max-w-[520px] max-[640px]:mt-[38px] ${
+                milestoneVisible
+                  ? "translate-x-0 opacity-100"
+                  : "translate-x-[42px] opacity-0"
+              }`}
+            >
+              <img
+                src={aboutMilestoneImage}
+                alt="Decorist designer selecting interior materials"
+                className={`h-full w-full object-cover object-center transition-transform duration-[1500ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                  milestoneVisible
+                    ? "scale-100"
+                    : "scale-[1.045]"
+                }`}
+              />
+
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.025] via-transparent to-black/[0.035]" />
+            </div>
+
+            {/* ==================== Milestone timeline ==================== */}
+
+            <div className="mt-[112px] max-w-[1120px] max-[1500px]:max-w-[1000px] max-[1400px]:max-w-[900px] max-[1180px]:mt-[76px] max-[1180px]:max-w-none max-[640px]:mt-[58px]">
+              {aboutMilestones.map((item, index) => (
+                <article
+                  key={item.id}
+                  style={{
+                    transitionDelay: `${250 + index * 90}ms`,
+                  }}
+                  className={`grid grid-cols-[20px_156px_minmax(0,1fr)] items-start gap-x-[42px] py-[48px] transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none first:pt-0 last:pb-0 max-[1400px]:grid-cols-[18px_132px_minmax(0,1fr)] max-[1400px]:gap-x-[34px] max-[1180px]:grid-cols-[18px_120px_minmax(0,1fr)] max-[1024px]:py-[42px] max-[768px]:grid-cols-[16px_92px_minmax(0,1fr)] max-[768px]:gap-x-[24px] max-[640px]:grid-cols-[14px_72px_minmax(0,1fr)] max-[640px]:gap-x-[16px] max-[640px]:py-[34px] ${
+                    milestoneVisible
+                      ? "translate-y-0 opacity-100"
+                      : "translate-y-[38px] opacity-0"
+                  }`}
+                >
+                  {/* ==================== Timeline marker ==================== */}
+
+                  <span
+                    aria-hidden="true"
+                    className={`mt-[7px] block h-[20px] w-[20px] max-[1400px]:h-[18px] max-[1400px]:w-[18px] max-[640px]:mt-[5px] max-[640px]:h-[14px] max-[640px]:w-[14px] ${
+                      item.active
+                        ? "bg-[#151515]"
+                        : "bg-[#6c6c69]"
+                    }`}
+                  />
+
+                  {/* ==================== Timeline year ==================== */}
+
+                  <p
+                    className={`m-0 text-[36px] font-medium leading-none tracking-[-0.045em] max-[1400px]:text-[32px] max-[1024px]:text-[29px] max-[768px]:text-[25px] max-[640px]:text-[21px] ${
+                      item.active
+                        ? "text-[#151515]"
+                        : "text-[#686866]"
+                    }`}
+                  >
+                    {item.year}
+                  </p>
+
+                  {/* ==================== Timeline information ==================== */}
+
+                  <div className="min-w-0">
+                    <h3
+                      className={`m-0 text-[30px] font-medium uppercase leading-[1.18] tracking-[-0.035em] max-[1400px]:text-[27px] max-[1180px]:text-[25px] max-[900px]:text-[22px] max-[640px]:text-[18px] ${
+                        item.active
+                          ? "text-[#151515]"
+                          : "text-[#686866]"
+                      }`}
+                    >
+                      {item.title}
+                    </h3>
+
+                    <p className="section-copy mt-[18px] max-w-[720px] max-[640px]:mt-[14px]">
+                      {item.description}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ==================== About section six ==================== */}
 
