@@ -21,6 +21,7 @@ import valueSustainabilityIcon from "../../assets/images/value-sustainability.sv
 import valueCreativeIcon from "../../assets/images/value-creative.svg";
 import valueCraftsmanshipIcon from "../../assets/images/value-craftsmanship.svg";
 
+import aboutMilestoneImage from "../../assets/images/about-milestone-image.jpg";
 
 /* ==================== About values information ==================== */
 
