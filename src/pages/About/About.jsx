@@ -3,7 +3,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  ShoppingCart,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import aboutHeroImage from "../../assets/images/about-hero-room.jpg";
@@ -22,6 +25,15 @@ import valueCreativeIcon from "../../assets/images/value-creative.svg";
 import valueCraftsmanshipIcon from "../../assets/images/value-craftsmanship.svg";
 
 import aboutMilestoneImage from "../../assets/images/about-milestone-image.jpg";
+
+import claraImage from "../../assets/images/clara-bennett.jpg";
+import leoImage from "../../assets/images/leo-matthews.jpg";
+import amaraImage from "../../assets/images/amara-chen.jpg";
+import nathanImage from "../../assets/images/nathan-ellis.jpg";
+import sofiaImage from "../../assets/images/sofia-ramirez.jpg";
+import jadeImage from "../../assets/images/jade-nguyen.jpg";
+
+import aboutFinalCtaImage from "../../assets/images/about-dream-cta-bg.jpg";
 
 /* ==================== About values information ==================== */
 
@@ -120,6 +132,55 @@ const aboutMilestones = [
 ];
 
 
+/* ==================== About team information ==================== */
+
+const teamMembers = [
+  {
+    id: 1,
+    number: "//001",
+    name: "Clara Bennett",
+    role: "Founder & Creative Director",
+    image: claraImage,
+  },
+  {
+    id: 2,
+    number: "//002",
+    name: "Leo Matthews",
+    role: "Head of Product Design",
+    image: leoImage,
+  },
+  {
+    id: 3,
+    number: "//003",
+    name: "Amara Chen",
+    role: "Lead Interior Stylist",
+    image: amaraImage,
+  },
+  {
+    id: 4,
+    number: "//004",
+    name: "Nathan Ellis",
+    role: "E-commerce & UX Strategist",
+    image: nathanImage,
+  },
+  {
+    id: 5,
+    number: "//005",
+    name: "Sofia Ramirez",
+    role: "Marketing & Brand Manager",
+    image: sofiaImage,
+  },
+  {
+    id: 6,
+    number: "//006",
+    name: "Jade Nguyen",
+    role: "Customer Experience Lead",
+    image: jadeImage,
+  },
+];
+
+
+
 /* ==================== Section reveal hook ==================== */
 
 const useSectionReveal = (threshold = 0.12) => {
@@ -179,6 +240,16 @@ const About = () => {
     sectionRef: milestoneRef,
     visible: milestoneVisible,
   } = useSectionReveal(0.06);
+
+  const {
+    sectionRef: teamRef,
+    visible: teamVisible,
+  } = useSectionReveal(0.06);
+
+  const {
+    sectionRef: finalCtaRef,
+    visible: finalCtaVisible,
+  } = useSectionReveal(0.14);
 
   return (
     <main className="w-full overflow-hidden bg-[#f8f8f6] text-[#151515]">
@@ -784,9 +855,199 @@ const About = () => {
         </div>
       </section>
 
-      {/* ==================== About section six ==================== */}
+      {/* ==================== About team section ==================== */}
 
-      {/* Section six code will be added here */}
+      <section
+        id="about-team"
+        ref={teamRef}
+        className="w-full scroll-mt-8 bg-[#f8f8f6] pb-[118px] pt-[112px] max-[1400px]:pb-[100px] max-[1400px]:pt-[96px] max-[1024px]:pb-[82px] max-[1024px]:pt-[78px] max-[640px]:pb-[64px] max-[640px]:pt-[62px]"
+      >
+        <div className="site-container">
+          {/* ==================== Team section labels ==================== */}
+
+          <div
+            className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+              teamVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[24px] opacity-0"
+            }`}
+          >
+            <p className="section-label">//06</p>
+
+            <p className="section-label">
+              /Our Team
+            </p>
+          </div>
+
+          {/* ==================== Team section heading ==================== */}
+
+          <div
+            className={`mx-auto mt-[72px] max-w-[1000px] text-center transition-all delay-[80ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1024px]:mt-[62px] max-[640px]:mt-[50px] ${
+              teamVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[36px] opacity-0"
+            }`}
+          >
+            <h2 className="about-display-font m-0 text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[1.08] tracking-[-0.055em] text-[#151515] max-[1024px]:text-[clamp(58px,7vw,70px)] max-[640px]:text-[clamp(44px,12vw,58px)]">
+              meet our team
+            </h2>
+          </div>
+
+          {/* ==================== Team member grid ==================== */}
+
+          <div className="mt-[62px] grid grid-cols-3 gap-x-[42px] gap-y-[82px] max-[1400px]:gap-x-[34px] max-[1180px]:gap-x-[28px] max-[1024px]:mt-[54px] max-[1024px]:grid-cols-2 max-[1024px]:gap-x-[34px] max-[1024px]:gap-y-[68px] max-[680px]:grid-cols-1 max-[680px]:gap-y-[58px] max-[640px]:mt-[46px]">
+            {teamMembers.map((member, index) => (
+              <article
+                key={member.id}
+                style={{
+                  transitionDelay: `${160 + index * 80}ms`,
+                }}
+                className={`group min-w-0 transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                  teamVisible
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-[42px] opacity-0"
+                }`}
+              >
+                {/* ==================== Team member image ==================== */}
+
+                <div className="relative aspect-square w-full overflow-hidden bg-[#d8d0c8]">
+                  <img
+                    src={member.image}
+                    alt={`${member.name}, ${member.role}`}
+                    className="h-full w-full object-cover object-top transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.045]"
+                  />
+
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/[0.08] via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                </div>
+
+                {/* ==================== Team member information ==================== */}
+
+                <div className="mt-[22px] flex items-start justify-between gap-[24px] max-[640px]:mt-[18px]">
+                  <p className="m-0 shrink-0 text-[15px] font-normal leading-none tracking-[-0.02em] text-[#777777] max-[640px]:text-[13px]">
+                    {member.number}
+                  </p>
+
+                  <div className="min-w-0 text-right">
+                    <h3 className="m-0 text-[21px] font-medium uppercase leading-[1.15] tracking-[-0.035em] text-[#151515] transition-transform duration-400 group-hover:-translate-y-[2px] max-[1400px]:text-[19px] max-[1180px]:text-[18px] max-[640px]:text-[17px]">
+                      {member.name}
+                    </h3>
+
+                    <p className="m-0 mt-[8px] text-[15px] font-normal italic leading-[1.4] tracking-[-0.015em] text-[#85827b] max-[1180px]:text-[14px] max-[640px]:text-[13px]">
+                      {member.role}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== About final call to action section ==================== */}
+
+      <section
+        id="about-final-cta"
+        ref={finalCtaRef}
+        className="relative flex min-h-[clamp(580px,42.63vw,873px)] w-full items-center justify-center overflow-hidden bg-[#5d402c] text-white max-[1024px]:min-h-[660px] max-[640px]:min-h-[620px]"
+      >
+        {/* ==================== Final CTA background image ==================== */}
+
+        <div className="absolute inset-0">
+          <img
+            src={aboutFinalCtaImage}
+            alt="Warm modern interior with a wooden table"
+            className={`h-full w-full object-cover object-center transition-transform duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+              finalCtaVisible
+                ? "scale-100"
+                : "scale-[1.06]"
+            }`}
+          />
+        </div>
+
+        {/* ==================== Warm horizontal overlay ==================== */}
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(31,13,4,0.42)_0%,rgba(47,26,12,0.23)_24%,rgba(69,43,23,0.16)_50%,rgba(42,19,8,0.3)_76%,rgba(22,7,2,0.46)_100%)]"
+        />
+
+        {/* ==================== Vertical depth overlay ==================== */}
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,8,3,0.24)_0%,rgba(30,15,6,0.07)_34%,rgba(27,12,4,0.13)_67%,rgba(14,4,1,0.47)_100%)]"
+        />
+
+        {/* ==================== Center readability overlay ==================== */}
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_72%_at_50%_42%,rgba(56,33,17,0.02)_0%,rgba(31,14,5,0.11)_55%,rgba(13,4,1,0.29)_100%)]"
+        />
+
+        {/* ==================== Final CTA content ==================== */}
+
+        <div className="site-container relative z-10 flex flex-col items-center py-[96px] text-center max-[1024px]:py-[82px] max-[640px]:py-[66px]">
+          {/* ==================== Final CTA heading ==================== */}
+
+          <h2
+            className={`about-display-font m-0 max-w-[1460px] text-[clamp(68px,5.2vw,78px)] font-normal lowercase leading-[1.08] tracking-[-0.055em] text-white transition-all duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1024px]:max-w-[820px] max-[640px]:text-[clamp(44px,12vw,58px)] ${
+              finalCtaVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[42px] opacity-0"
+            }`}
+          >
+            <span className="block">
+              ready to reimagine your
+            </span>
+
+            <span className="mt-[14px] block max-[640px]:mt-[8px]">
+              dream home?
+            </span>
+          </h2>
+
+          {/* ==================== Final CTA description ==================== */}
+
+          <p
+            className={`m-0 mt-[40px] max-w-[780px] text-[21px] font-normal leading-[1.55] tracking-[-0.018em] text-white/90 transition-all delay-[140ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[1024px]:mt-[34px] max-[1024px]:max-w-[650px] max-[1024px]:text-[18px] max-[640px]:mt-[28px] max-[640px]:max-w-[380px] max-[640px]:text-[15px] ${
+              finalCtaVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[32px] opacity-0"
+            }`}
+          >
+            Find your new favorite piece today and explore fresh styles
+            <br className="max-[640px]:hidden" />
+            that speak to you.
+          </p>
+
+          {/* ==================== Final CTA button ==================== */}
+
+          <Link
+            to="/shop"
+            className={`group mt-[52px] inline-flex min-h-[66px] min-w-[286px] items-center justify-center gap-[18px] rounded-[4px] border border-white bg-white px-[34px] text-[17px] font-semibold uppercase leading-none tracking-[-0.015em] text-[#171717] no-underline shadow-[0_20px_45px_rgba(0,0,0,0.18)] transition-all delay-[240ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[5px] hover:bg-transparent hover:text-white hover:shadow-[0_26px_55px_rgba(0,0,0,0.28)] motion-reduce:transition-none max-[1024px]:mt-[46px] max-[1024px]:min-h-[60px] max-[1024px]:min-w-[246px] max-[1024px]:text-[15px] max-[640px]:mt-[38px] max-[640px]:min-h-[54px] max-[640px]:min-w-[210px] max-[640px]:px-[26px] max-[640px]:text-[13px] ${
+              finalCtaVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[34px] opacity-0"
+            }`}
+          >
+            <span>Start Shopping</span>
+
+            <ShoppingCart
+              size={24}
+              strokeWidth={1.65}
+              className="transition-transform duration-300 group-hover:translate-x-[3px] group-hover:-translate-y-[2px] max-[640px]:h-[21px] max-[640px]:w-[21px]"
+            />
+          </Link>
+        </div>
+
+        {/* ==================== Bottom soft shadow ==================== */}
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t from-black/30 to-transparent"
+        />
+      </section>
+      
     </main>
   );
 };
