@@ -76,6 +76,38 @@ h6 {
   margin-top: 0;
 }
 
+
+body,
+body * {
+  caret-color: transparent;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+button,
+label,
+li,
+div {
+  -webkit-user-select: default;
+  user-select: default;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  caret-color: auto;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 /* =====================================================
    Shared Containers
 ===================================================== */
