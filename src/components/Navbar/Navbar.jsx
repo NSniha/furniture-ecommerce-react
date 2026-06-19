@@ -1,12 +1,22 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Heart,
   Menu,
+  Minus,
+  Plus,
   Search,
   ShoppingCart,
+  Trash2,
   X,
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+} from "react-router-dom";
 
 import logoImage from "../../assets/images/logo-white.png";
 
@@ -33,9 +43,14 @@ const navItems = [
   },
 ];
 
+const CART_ITEMS_KEY = "decoristCartItems";
 const CART_COUNT_KEY = "decoristCartCount";
+
+const WISHLIST_ITEMS_KEY = "decoristWishlistItems";
 const WISHLIST_COUNT_KEY = "decoristWishlistCount";
+
 const COUNT_UPDATE_EVENT = "decorist-counts-updated";
+const CART_ADDED_EVENT = "decorist-cart-item-added";
 
 const getSavedCount = (key) => {
   const savedValue = Number(localStorage.getItem(key));
@@ -47,14 +62,52 @@ const getSavedCount = (key) => {
   return savedValue;
 };
 
+const getStoredItems = (key) => {
+  try {
+    const savedItems = JSON.parse(localStorage.getItem(key));
+
+    return Array.isArray(savedItems) ? savedItems : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveStoredItems = (key, items) => {
+  localStorage.setItem(key, JSON.stringify(items));
+};
+
+const getCartQuantity = (items) => {
+  return items.reduce((total, item) => {
+    return total + Number(item.quantity || 1);
+  }, 0);
+};
+
+const getPriceNumber = (price = "") => {
+  const cleanPrice = String(price).replace(/[^0-9.]/g, "");
+  const numericPrice = Number(cleanPrice);
+
+  return Number.isFinite(numericPrice) ? numericPrice : 0;
+};
+
 const Navbar = () => {
   const location = useLocation();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activePopup, setActivePopup] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
 
   const isHomePage = location.pathname === "/";
+  const isCartPopupOpen = activePopup === "cart";
+  const isWishlistPopupOpen = activePopup === "wishlist";
+
+  const cartTotal = useMemo(() => {
+    return cartItems.reduce((total, item) => {
+      return total + getPriceNumber(item.price) * Number(item.quantity || 1);
+    }, 0);
+  }, [cartItems]);
 
   const isLinkActive = (item) => {
     if (item.path === "/") {
@@ -71,32 +124,181 @@ const Navbar = () => {
     return location.pathname === item.path;
   };
 
+  const closePopup = () => {
+    setActivePopup(null);
+  };
+
+  const syncStorageState = () => {
+    const nextCartItems = getStoredItems(CART_ITEMS_KEY);
+    const nextWishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
+
+    setCartItems(nextCartItems);
+    setWishlistItems(nextWishlistItems);
+
+    setCartCount(getSavedCount(CART_COUNT_KEY));
+    setWishlistCount(getSavedCount(WISHLIST_COUNT_KEY));
+  };
+
+  const updateCartStorage = (items) => {
+    const nextCount = getCartQuantity(items);
+
+    saveStoredItems(CART_ITEMS_KEY, items);
+    localStorage.setItem(CART_COUNT_KEY, String(nextCount));
+
+    setCartItems(items);
+    setCartCount(nextCount);
+
+    window.dispatchEvent(new Event(COUNT_UPDATE_EVENT));
+  };
+
+  const updateWishlistStorage = (items) => {
+    const nextCount = items.length;
+
+    saveStoredItems(WISHLIST_ITEMS_KEY, items);
+    localStorage.setItem(WISHLIST_COUNT_KEY, String(nextCount));
+
+    setWishlistItems(items);
+    setWishlistCount(nextCount);
+
+    window.dispatchEvent(new Event(COUNT_UPDATE_EVENT));
+  };
+
+  const handleSearch = () => {
+    console.log("Open search");
+  };
+
+  const handleWishlist = () => {
+    syncStorageState();
+    setMenuOpen(false);
+    setActivePopup("wishlist");
+  };
+
+  const handleCart = () => {
+    syncStorageState();
+    setMenuOpen(false);
+    setActivePopup("cart");
+  };
+
+  const handleRemoveCartItem = (productId) => {
+    const nextCartItems = cartItems.filter((item) => {
+      return Number(item.id) !== Number(productId);
+    });
+
+    updateCartStorage(nextCartItems);
+  };
+
+  const handleIncreaseQuantity = (productId) => {
+    const nextCartItems = cartItems.map((item) => {
+      if (Number(item.id) !== Number(productId)) {
+        return item;
+      }
+
+      return {
+        ...item,
+        quantity: Number(item.quantity || 1) + 1,
+      };
+    });
+
+    updateCartStorage(nextCartItems);
+  };
+
+  const handleDecreaseQuantity = (productId) => {
+    const nextCartItems = cartItems
+      .map((item) => {
+        if (Number(item.id) !== Number(productId)) {
+          return item;
+        }
+
+        return {
+          ...item,
+          quantity: Math.max(1, Number(item.quantity || 1) - 1),
+        };
+      })
+      .filter((item) => Number(item.quantity || 1) > 0);
+
+    updateCartStorage(nextCartItems);
+  };
+
+  const handleRemoveWishlistItem = (productId) => {
+    const nextWishlistItems = wishlistItems.filter((item) => {
+      return Number(item.id) !== Number(productId);
+    });
+
+    updateWishlistStorage(nextWishlistItems);
+  };
+
+  const handleMoveWishlistToCart = (product) => {
+    const currentCartItems = getStoredItems(CART_ITEMS_KEY);
+
+    const existingProduct = currentCartItems.find((item) => {
+      return Number(item.id) === Number(product.id);
+    });
+
+    let nextCartItems;
+
+    if (existingProduct) {
+      nextCartItems = currentCartItems.map((item) => {
+        if (Number(item.id) !== Number(product.id)) {
+          return item;
+        }
+
+        return {
+          ...item,
+          quantity: Number(item.quantity || 1) + 1,
+        };
+      });
+    } else {
+      nextCartItems = [
+        ...currentCartItems,
+        {
+          ...product,
+          quantity: 1,
+        },
+      ];
+    }
+
+    const nextWishlistItems = wishlistItems.filter((item) => {
+      return Number(item.id) !== Number(product.id);
+    });
+
+    updateCartStorage(nextCartItems);
+    updateWishlistStorage(nextWishlistItems);
+    setActivePopup("cart");
+  };
+
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    document.body.style.overflow =
+      menuOpen || activePopup ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
+  }, [menuOpen, activePopup]);
 
   useEffect(() => {
-    const updateCounts = () => {
-      setCartCount(getSavedCount(CART_COUNT_KEY));
-      setWishlistCount(getSavedCount(WISHLIST_COUNT_KEY));
+    syncStorageState();
+
+    const handleStorageUpdate = () => {
+      syncStorageState();
     };
 
-    updateCounts();
+    const handleCartItemAdded = () => {
+      syncStorageState();
+      setActivePopup("cart");
+    };
 
-    window.addEventListener("storage", updateCounts);
-    window.addEventListener(COUNT_UPDATE_EVENT, updateCounts);
+    window.addEventListener("storage", handleStorageUpdate);
+    window.addEventListener(COUNT_UPDATE_EVENT, handleStorageUpdate);
+    window.addEventListener(CART_ADDED_EVENT, handleCartItemAdded);
 
     return () => {
-      window.removeEventListener("storage", updateCounts);
-      window.removeEventListener(COUNT_UPDATE_EVENT, updateCounts);
+      window.removeEventListener("storage", handleStorageUpdate);
+      window.removeEventListener(COUNT_UPDATE_EVENT, handleStorageUpdate);
+      window.removeEventListener(CART_ADDED_EVENT, handleCartItemAdded);
     };
   }, []);
 
@@ -104,6 +306,7 @@ const Navbar = () => {
     const handleEscape = (event) => {
       if (event.key === "Escape") {
         setMenuOpen(false);
+        setActivePopup(null);
       }
     };
 
@@ -114,21 +317,10 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleSearch = () => {
-    console.log("Open search");
-  };
-
-  const handleWishlist = () => {
-    console.log("Open wishlist");
-  };
-
-  const handleCart = () => {
-    console.log("Open cart");
-  };
-
   return (
     <>
-      {/* Main Navbar */}
+      {/* ==================== Main navbar ==================== */}
+
       <header
         className={`left-0 top-0 z-50 w-full ${
           isHomePage
@@ -137,7 +329,8 @@ const Navbar = () => {
         }`}
       >
         <div className="site-container flex h-[104px] items-center justify-between max-[1400px]:h-[94px] max-[1024px]:h-[82px] max-[640px]:h-[76px]">
-          {/* Logo */}
+          {/* ==================== Logo ==================== */}
+
           <Link
             to="/"
             aria-label="Decorist homepage"
@@ -154,9 +347,9 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Desktop Navigation and Actions */}
+          {/* ==================== Desktop navigation and actions ==================== */}
+
           <div className="hidden items-center gap-[40px] lg:flex xl:gap-[46px]">
-            {/* Navigation */}
             <nav
               aria-label="Main navigation"
               className="flex items-center gap-[40px] xl:gap-[46px]"
@@ -180,7 +373,6 @@ const Navbar = () => {
                   >
                     {item.label}
 
-                    {/* Hover-only underline */}
                     <span
                       className={`absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100 ${
                         isHomePage
@@ -193,7 +385,6 @@ const Navbar = () => {
               })}
             </nav>
 
-            {/* Divider */}
             <div
               className={`h-[32px] w-px ${
                 isHomePage
@@ -202,9 +393,7 @@ const Navbar = () => {
               }`}
             />
 
-            {/* Actions */}
             <div className="flex items-center gap-[27px]">
-              {/* Search */}
               <button
                 type="button"
                 onClick={handleSearch}
@@ -215,13 +404,9 @@ const Navbar = () => {
                     : "text-[#171717] hover:text-[#171717]/60"
                 }`}
               >
-                <Search
-                  size={24}
-                  strokeWidth={1.55}
-                />
+                <Search size={24} strokeWidth={1.55} />
               </button>
 
-              {/* Wishlist */}
               <button
                 type="button"
                 onClick={handleWishlist}
@@ -232,10 +417,7 @@ const Navbar = () => {
                     : "text-[#171717] hover:text-[#171717]/60"
                 }`}
               >
-                <Heart
-                  size={24}
-                  strokeWidth={1.55}
-                />
+                <Heart size={24} strokeWidth={1.55} />
 
                 <span
                   className={`absolute -right-[11px] -top-[11px] inline-flex h-[17px] min-w-[17px] items-center justify-center rounded-full px-1 text-[9px] font-semibold leading-none ${
@@ -248,7 +430,6 @@ const Navbar = () => {
                 </span>
               </button>
 
-              {/* Cart */}
               <button
                 type="button"
                 onClick={handleCart}
@@ -259,10 +440,7 @@ const Navbar = () => {
                     : "text-[#171717] hover:text-[#171717]/60"
                 }`}
               >
-                <ShoppingCart
-                  size={25}
-                  strokeWidth={1.55}
-                />
+                <ShoppingCart size={25} strokeWidth={1.55} />
 
                 <span
                   className={`absolute -right-[11px] -top-[11px] inline-flex h-[17px] min-w-[17px] items-center justify-center rounded-full px-1 text-[9px] font-semibold leading-none ${
@@ -277,7 +455,8 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Hamburger Button */}
+          {/* ==================== Mobile hamburger button ==================== */}
+
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
@@ -289,15 +468,13 @@ const Navbar = () => {
                 : "text-[#171717] hover:text-[#171717]/60"
             }`}
           >
-            <Menu
-              size={29}
-              strokeWidth={1.55}
-            />
+            <Menu size={29} strokeWidth={1.55} />
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* ==================== Mobile menu ==================== */}
+
       <div
         className={`fixed inset-0 z-[100] transition-all duration-300 lg:hidden ${
           menuOpen
@@ -305,7 +482,6 @@ const Navbar = () => {
             : "invisible pointer-events-none opacity-0"
         }`}
       >
-        {/* Backdrop */}
         <button
           type="button"
           onClick={() => setMenuOpen(false)}
@@ -313,7 +489,6 @@ const Navbar = () => {
           className="absolute inset-0 h-full w-full cursor-default border-0 bg-black/60 p-0 backdrop-blur-sm"
         />
 
-        {/* Mobile Drawer */}
         <aside
           className={`absolute right-0 top-0 flex h-full w-[84%] max-w-[380px] flex-col overflow-y-auto bg-[#4b3322] px-7 pb-8 pt-7 text-white shadow-[-24px_0_70px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             menuOpen
@@ -321,7 +496,6 @@ const Navbar = () => {
               : "translate-x-full"
           }`}
         >
-          {/* Drawer Header */}
           <div className="flex items-center justify-between gap-6">
             <Link
               to="/"
@@ -336,21 +510,16 @@ const Navbar = () => {
               />
             </Link>
 
-            {/* Close Button */}
             <button
               type="button"
               onClick={() => setMenuOpen(false)}
               aria-label="Close navigation menu"
               className="inline-flex shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-white transition-all duration-300 hover:rotate-90 hover:text-white/70"
             >
-              <X
-                size={27}
-                strokeWidth={1.55}
-              />
+              <X size={27} strokeWidth={1.55} />
             </button>
           </div>
 
-          {/* Mobile Navigation */}
           <nav
             aria-label="Mobile navigation"
             className="mt-[70px] flex flex-col"
@@ -391,49 +560,36 @@ const Navbar = () => {
             })}
           </nav>
 
-          {/* Mobile Actions */}
           <div className="mt-8 flex items-center gap-5">
-            {/* Search */}
             <button
               type="button"
               onClick={handleSearch}
               aria-label="Search"
               className="inline-flex cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/70"
             >
-              <Search
-                size={23}
-                strokeWidth={1.55}
-              />
+              <Search size={23} strokeWidth={1.55} />
             </button>
 
-            {/* Wishlist */}
             <button
               type="button"
               onClick={handleWishlist}
               aria-label={`Open wishlist with ${wishlistCount} items`}
               className="relative inline-flex cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/70"
             >
-              <Heart
-                size={23}
-                strokeWidth={1.55}
-              />
+              <Heart size={23} strokeWidth={1.55} />
 
               <span className="absolute -right-[10px] -top-[10px] inline-flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-white px-1 text-[9px] font-semibold text-[#4b3322]">
                 {wishlistCount}
               </span>
             </button>
 
-            {/* Cart */}
             <button
               type="button"
               onClick={handleCart}
               aria-label={`Open cart with ${cartCount} items`}
               className="relative inline-flex cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-white transition-all duration-300 hover:-translate-y-0.5 hover:text-white/70"
             >
-              <ShoppingCart
-                size={24}
-                strokeWidth={1.55}
-              />
+              <ShoppingCart size={24} strokeWidth={1.55} />
 
               <span className="absolute -right-[10px] -top-[10px] inline-flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-white px-1 text-[9px] font-semibold text-[#4b3322]">
                 {cartCount}
@@ -441,13 +597,291 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Drawer Description */}
           <div className="mt-auto pt-12">
-            <p className="text-[12px] m-0 text-white/65">
+            <p className="m-0 text-[12px] text-white/65">
               Thoughtfully curated furniture and decor for beautifully personal
               spaces.
             </p>
           </div>
+        </aside>
+      </div>
+
+      {/* ==================== Cart and wishlist popup ==================== */}
+
+      <div
+        className={`fixed inset-0 z-[120] transition-all duration-300 ${
+          activePopup
+            ? "visible pointer-events-auto opacity-100"
+            : "invisible pointer-events-none opacity-0"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={closePopup}
+          aria-label="Close popup backdrop"
+          className="absolute inset-0 h-full w-full cursor-default border-0 bg-black/45 p-0 backdrop-blur-[3px]"
+        />
+
+        <aside
+          className={`absolute right-0 top-0 flex h-full w-[92%] max-w-[440px] flex-col bg-[#fafaf8] px-6 pb-6 pt-6 text-[#151515] shadow-[-26px_0_80px_rgba(0,0,0,0.22)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] max-[480px]:w-full max-[480px]:max-w-none ${
+            activePopup
+              ? "translate-x-0"
+              : "translate-x-full"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-5 border-b border-black/10 pb-5">
+            <div>
+              <p className="m-0 text-[12px] font-medium uppercase leading-none tracking-[0.08em] text-[#77736b]">
+                Decorist
+              </p>
+
+              <h2 className="m-0 mt-2 text-[28px] font-medium uppercase leading-none tracking-[-0.045em] text-[#151515]">
+                {isCartPopupOpen ? "Shopping Cart" : "Wishlist"}
+              </h2>
+            </div>
+
+            <button
+              type="button"
+              onClick={closePopup}
+              aria-label="Close popup"
+              className="inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/10 bg-transparent p-0 text-[#151515] transition-all duration-300 hover:rotate-90 hover:bg-[#151515] hover:text-white"
+            >
+              <X size={22} strokeWidth={1.55} />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto py-6">
+            {isCartPopupOpen && (
+              <>
+                {cartItems.length > 0 ? (
+                  <div className="flex flex-col gap-5">
+                    {cartItems.map((item) => (
+                      <article
+                        key={item.id}
+                        className="grid grid-cols-[92px_minmax(0,1fr)] gap-4 border-b border-black/10 pb-5 last:border-b-0"
+                      >
+                        <Link
+                          to={`/shop-details/${item.id}`}
+                          onClick={closePopup}
+                          className="block h-[104px] overflow-hidden bg-[#e5ded4]"
+                        >
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </Link>
+
+                        <div className="min-w-0">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="m-0 text-[12px] font-medium leading-none tracking-[-0.02em] text-[#77736b]">
+                                {item.category}
+                              </p>
+
+                              <Link
+                                to={`/shop-details/${item.id}`}
+                                onClick={closePopup}
+                                className="mt-2 block text-[14px] font-semibold uppercase leading-[1.25] tracking-[-0.035em] text-[#151515] no-underline hover:underline"
+                              >
+                                {item.title}
+                              </Link>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveCartItem(item.id)}
+                              aria-label={`Remove ${item.title} from cart`}
+                              className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[#77736b] transition-colors duration-300 hover:text-[#151515]"
+                            >
+                              <Trash2 size={17} strokeWidth={1.55} />
+                            </button>
+                          </div>
+
+                          <div className="mt-4 flex items-center justify-between gap-4">
+                            <div className="flex h-9 items-center border border-black/12">
+                              <button
+                                type="button"
+                                onClick={() => handleDecreaseQuantity(item.id)}
+                                aria-label={`Decrease ${item.title} quantity`}
+                                className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[#151515]"
+                              >
+                                <Minus size={14} strokeWidth={1.7} />
+                              </button>
+
+                              <span className="inline-flex h-full min-w-9 items-center justify-center text-[13px] font-medium">
+                                {item.quantity || 1}
+                              </span>
+
+                              <button
+                                type="button"
+                                onClick={() => handleIncreaseQuantity(item.id)}
+                                aria-label={`Increase ${item.title} quantity`}
+                                className="inline-flex h-full w-9 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[#151515]"
+                              >
+                                <Plus size={14} strokeWidth={1.7} />
+                              </button>
+                            </div>
+
+                            <p className="m-0 text-[18px] font-medium leading-none tracking-[-0.035em] text-[#151515]">
+                              {item.price}
+                            </p>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex min-h-[420px] flex-col items-center justify-center text-center">
+                    <ShoppingCart
+                      size={48}
+                      strokeWidth={1.3}
+                      className="text-[#a8a49c]"
+                    />
+
+                    <h3 className="m-0 mt-6 text-[24px] font-medium uppercase tracking-[-0.035em] text-[#151515]">
+                      Cart is empty
+                    </h3>
+
+                    <p className="m-0 mt-3 max-w-[280px] text-[14px] leading-[1.6] text-[#77736b]">
+                      Add your favorite furniture and decor pieces to see them
+                      here.
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+
+            {isWishlistPopupOpen && (
+              <>
+                {wishlistItems.length > 0 ? (
+                  <div className="flex flex-col gap-5">
+                    {wishlistItems.map((item) => (
+                      <article
+                        key={item.id}
+                        className="grid grid-cols-[92px_minmax(0,1fr)] gap-4 border-b border-black/10 pb-5 last:border-b-0"
+                      >
+                        <Link
+                          to={`/shop-details/${item.id}`}
+                          onClick={closePopup}
+                          className="block h-[104px] overflow-hidden bg-[#e5ded4]"
+                        >
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </Link>
+
+                        <div className="min-w-0">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="m-0 text-[12px] font-medium leading-none tracking-[-0.02em] text-[#77736b]">
+                                {item.category}
+                              </p>
+
+                              <Link
+                                to={`/shop-details/${item.id}`}
+                                onClick={closePopup}
+                                className="mt-2 block text-[14px] font-semibold uppercase leading-[1.25] tracking-[-0.035em] text-[#151515] no-underline hover:underline"
+                              >
+                                {item.title}
+                              </Link>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleRemoveWishlistItem(item.id)
+                              }
+                              aria-label={`Remove ${item.title} from wishlist`}
+                              className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[#77736b] transition-colors duration-300 hover:text-[#151515]"
+                            >
+                              <Trash2 size={17} strokeWidth={1.55} />
+                            </button>
+                          </div>
+
+                          <div className="mt-4 flex items-center justify-between gap-4">
+                            <p className="m-0 text-[18px] font-medium leading-none tracking-[-0.035em] text-[#151515]">
+                              {item.price}
+                            </p>
+
+                            <button
+                              type="button"
+                              onClick={() => handleMoveWishlistToCart(item)}
+                              className="inline-flex h-9 items-center justify-center gap-2 border border-[#151515] bg-[#151515] px-3 text-[11px] font-semibold uppercase leading-none tracking-[-0.01em] text-white transition-colors duration-300 hover:bg-transparent hover:text-[#151515]"
+                            >
+                              <span>Add</span>
+                              <ShoppingCart size={14} strokeWidth={1.55} />
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex min-h-[420px] flex-col items-center justify-center text-center">
+                    <Heart
+                      size={48}
+                      strokeWidth={1.3}
+                      className="text-[#a8a49c]"
+                    />
+
+                    <h3 className="m-0 mt-6 text-[24px] font-medium uppercase tracking-[-0.035em] text-[#151515]">
+                      Wishlist is empty
+                    </h3>
+
+                    <p className="m-0 mt-3 max-w-[280px] text-[14px] leading-[1.6] text-[#77736b]">
+                      Save your favorite products and quickly find them later.
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {isCartPopupOpen && (
+            <div className="border-t border-black/10 pt-5">
+              <div className="flex items-center justify-between gap-5">
+                <p className="m-0 text-[15px] font-medium uppercase tracking-[-0.02em] text-[#77736b]">
+                  Subtotal
+                </p>
+
+                <p className="m-0 text-[24px] font-medium leading-none tracking-[-0.045em] text-[#151515]">
+                  ${cartTotal.toFixed(2)}
+                </p>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <Link
+                  to="/shop"
+                  onClick={closePopup}
+                  className="inline-flex h-12 items-center justify-center border border-[#151515] bg-transparent px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-[#151515] no-underline transition-colors duration-300 hover:bg-[#151515] hover:text-white"
+                >
+                  Continue
+                </Link>
+
+                <button
+                  type="button"
+                  className="inline-flex h-12 cursor-pointer items-center justify-center border border-[#151515] bg-[#151515] px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-white transition-colors duration-300 hover:bg-transparent hover:text-[#151515]"
+                >
+                  Checkout
+                </button>
+              </div>
+            </div>
+          )}
+
+          {isWishlistPopupOpen && (
+            <div className="border-t border-black/10 pt-5">
+              <Link
+                to="/shop"
+                onClick={closePopup}
+                className="inline-flex h-12 w-full items-center justify-center border border-[#151515] bg-[#151515] px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-white no-underline transition-colors duration-300 hover:bg-transparent hover:text-[#151515]"
+              >
+                Explore Products
+              </Link>
+            </div>
+          )}
         </aside>
       </div>
     </>
