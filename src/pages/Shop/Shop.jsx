@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -11,12 +12,14 @@ import {
 import { Link } from "react-router-dom";
 
 import NewArrivals from "../../components/NewArrivals/NewArrivals";
+import RedesignCTA from "../../components/RedesignCTA/RedesignCTA";
 
-import featuredSofaImage from "../../assets/images/featured-sofa-shop.jpg";
-import featuredLampImage from "../../assets/images/featured-lamp-shop.jpg";
-import saleBlanketImage from "../../assets/images/sale-blanket-shop.jpg";
-import saleSconceImage from "../../assets/images/sale-sconce-shop.jpg";
-import saleTrayImage from "../../assets/images/sale-tray-shop.jpg";
+import {
+  featuredProducts,
+  saleProducts,
+  shopCategories,
+  shopProducts,
+} from "../../data/shopProducts";
 
 const CART_ITEMS_KEY = "decoristCartItems";
 const CART_COUNT_KEY = "decoristCartCount";
@@ -26,77 +29,6 @@ const WISHLIST_COUNT_KEY = "decoristWishlistCount";
 
 const COUNT_UPDATE_EVENT = "decorist-counts-updated";
 const CART_ADDED_EVENT = "decorist-cart-item-added";
-
-const featuredProducts = [
-  {
-    id: 101,
-    slug: "velvet-tufted-sofa",
-    image: featuredSofaImage,
-    category: "Living Room",
-    title: "Velvet Tufted Sofa",
-    price: "$520",
-    oldPrice: "",
-    quantity: 1,
-    features: [
-      "Premium fabric with plush seating",
-      "Available in 3 colors",
-    ],
-    description:
-      "Add a touch of luxury and comfort with this elegant velvet tufted sofa, perfect for relaxing and styling.",
-  },
-  {
-    id: 102,
-    slug: "industrial-floor-lamp",
-    image: featuredLampImage,
-    category: "Living Room",
-    title: "Industrial Floor Lamp",
-    price: "$120",
-    oldPrice: "",
-    quantity: 1,
-    features: [
-      "Adjustable height and angle",
-      "Warm ambient glow",
-    ],
-    description:
-      "Illuminate your home with this stylish floor lamp—both a lighting solution and a statement piece.",
-  },
-];
-
-const saleProducts = [
-  {
-    id: 201,
-    slug: "geometric-woven-blanket",
-    image: saleBlanketImage,
-    category: "Bedroom",
-    title: "Geometric Woven Blanket",
-    discount: "20% OFF",
-    price: "$96",
-    oldPrice: "$120",
-    quantity: 1,
-  },
-  {
-    id: 202,
-    slug: "glass-globe-wall-sconce-set",
-    image: saleSconceImage,
-    category: "Lighting",
-    title: "Glass Globe Wall Sconce Set",
-    discount: "25% OFF",
-    price: "$135",
-    oldPrice: "$180",
-    quantity: 1,
-  },
-  {
-    id: 203,
-    slug: "terrazzo-decorative-tray",
-    image: saleTrayImage,
-    category: "Kitchen & Dining",
-    title: "Terrazzo Decorative Tray",
-    discount: "18% OFF",
-    price: "$82",
-    oldPrice: "$100",
-    quantity: 1,
-  },
-];
 
 /* ==================== Storage helpers ==================== */
 
@@ -133,10 +65,20 @@ const getProductPayload = (product) => {
     image: product.image,
     category: product.category,
     title: product.title,
+    subtitle: product.subtitle || "",
     oldPrice: product.oldPrice || "",
     price: product.price,
     discount: product.discount || "",
     quantity: 1,
+    description: product.description || "",
+    features: product.features || [],
+    material: product.material || "",
+    dimensions: product.dimensions || "",
+    care: product.care || "",
+    rating: product.rating || 4.8,
+    reviews: product.reviews || 0,
+    stock: product.stock || 0,
+    tags: product.tags || [],
   };
 };
 
@@ -185,7 +127,38 @@ const Shop = () => {
     visible: featuredVisible,
   } = useSectionReveal(0.1);
 
+  const {
+    sectionRef: curatedRef,
+    visible: curatedVisible,
+  } = useSectionReveal(0.08);
+
   const [wishlistIds, setWishlistIds] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const productsPerPage = 12;
+
+  const filteredProducts = useMemo(() => {
+    if (activeCategory === "All") {
+      return shopProducts;
+    }
+
+    return shopProducts.filter((product) => {
+      return product.category === activeCategory;
+    });
+  }, [activeCategory]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredProducts.length / productsPerPage)
+  );
+
+  const visibleProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+
+    return filteredProducts.slice(startIndex, endIndex);
+  }, [currentPage, filteredProducts]);
 
   /* ==================== Wishlist state sync ==================== */
 
@@ -208,6 +181,21 @@ const Shop = () => {
       window.removeEventListener(COUNT_UPDATE_EVENT, syncWishlistState);
     };
   }, []);
+
+  /* ==================== Category filter action ==================== */
+
+  const handleCategoryChange = (category) => {
+    setActiveCategory(category);
+    setCurrentPage(1);
+  };
+
+  /* ==================== Pagination action ==================== */
+
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+
+    setCurrentPage(page);
+  };
 
   /* ==================== Wishlist action ==================== */
 
@@ -579,6 +567,260 @@ const Shop = () => {
           </div>
         </div>
       </section>
+
+      {/* ==================== Curated products section ==================== */}
+
+      <section
+        id="curated-products"
+        ref={curatedRef}
+        className="w-full bg-[#fafaf8] pb-[122px] pt-[112px] max-[1400px]:pb-[104px] max-[1400px]:pt-[96px] max-[1024px]:pb-[84px] max-[1024px]:pt-[78px] max-[640px]:pb-[66px] max-[640px]:pt-[62px]"
+      >
+        <div className="site-container">
+          {/* ==================== Section labels ==================== */}
+
+          <div
+            className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              curatedVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[24px] opacity-0"
+            }`}
+          >
+            <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
+              //03
+            </p>
+
+            <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
+              /Curated Products
+            </p>
+          </div>
+
+          {/* ==================== Curated heading ==================== */}
+
+          <div className="mt-[72px] grid grid-cols-[0.95fr_1.05fr] items-end gap-[90px] max-[1180px]:gap-[58px] max-[900px]:grid-cols-1 max-[900px]:gap-[42px] max-[640px]:mt-[50px]">
+            <h2
+              className={`m-0 max-w-[700px] font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-[1.05] tracking-[-0.055em] text-[#151515] transition-all delay-[90ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[640px]:text-[clamp(44px,12vw,58px)] ${
+                curatedVisible
+                  ? "translate-x-0 opacity-100"
+                  : "-translate-x-[36px] opacity-0"
+              }`}
+            >
+              <span className="block">
+                explore our curated
+              </span>
+
+              <span className="mt-[8px] block">
+                products
+              </span>
+            </h2>
+
+            {/* ==================== Category filter navigation ==================== */}
+
+            <div
+              className={`flex flex-wrap items-center justify-end gap-x-[13px] gap-y-3 transition-all delay-[160ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[900px]:justify-start ${
+                curatedVisible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-[30px] opacity-0"
+              }`}
+            >
+              {shopCategories.map((category, index) => {
+                const isActive = category === activeCategory;
+
+                return (
+                  <div
+                    key={category}
+                    className="flex items-center gap-x-[13px]"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleCategoryChange(category)}
+                      className={`cursor-pointer border-0 bg-transparent p-0 font-['Inter',sans-serif] text-[13px] font-medium uppercase leading-none tracking-[-0.015em] transition-colors duration-300 max-[640px]:text-[12px] ${
+                        isActive
+                          ? "text-[#151515] underline decoration-[1.5px] underline-offset-[4px]"
+                          : "text-[#666666] hover:text-[#151515]"
+                      }`}
+                    >
+                      {category}
+                    </button>
+
+                    {index !== shopCategories.length - 1 && (
+                      <span className="text-[13px] font-medium leading-none text-[#666666]">
+                        /
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ==================== Curated product grid ==================== */}
+
+          <div
+            key={`${activeCategory}-${currentPage}`}
+            className="mt-[70px] grid grid-cols-4 gap-x-[34px] gap-y-[70px] max-[1280px]:gap-x-[28px] max-[1024px]:grid-cols-3 max-[900px]:grid-cols-2 max-[640px]:mt-[52px] max-[640px]:grid-cols-1 max-[640px]:gap-y-[48px]"
+          >
+            {visibleProducts.map((product, index) => (
+              <article
+                key={product.id}
+                style={{
+                  transitionDelay: `${120 + index * 45}ms`,
+                }}
+                className={`group transition-all duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  curatedVisible
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-[34px] opacity-0"
+                }`}
+              >
+                <p className="mb-[12px] mt-0 font-['Inter',sans-serif] text-[16px] font-medium leading-none tracking-[-0.035em] text-[#5e5e5e] max-[640px]:text-[14px]">
+                  //
+                  {String(
+                    index + 1 + (currentPage - 1) * productsPerPage
+                  ).padStart(3, "0")}
+                </p>
+
+                <div className="relative aspect-[263/310] overflow-hidden bg-[#e4ddd3]">
+                  <Link
+                    to={`/shop-details/${product.id}`}
+                    aria-label={`View ${product.title} details`}
+                    className="block h-full w-full"
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="h-full w-full object-cover object-center transition-transform duration-[1200ms] ease-out group-hover:scale-[1.045]"
+                    />
+                  </Link>
+
+                  <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/[0.08]" />
+
+                  {renderProductActions(product)}
+                </div>
+
+                <div className="pt-[22px]">
+                  <p className="mb-[12px] mt-0 font-['Inter',sans-serif] text-[13px] font-medium leading-none tracking-[-0.02em] text-[#74746f]">
+                    {product.category}
+                  </p>
+
+                  <Link
+                    to={`/shop-details/${product.id}`}
+                    className="block w-fit text-inherit no-underline"
+                  >
+                    <h3 className="m-0 font-['Inter',sans-serif] text-[13px] font-bold uppercase leading-[1.25] tracking-[-0.025em] text-[#151515] transition-colors duration-300 hover:text-[#6b665f]">
+                      {product.title}
+                    </h3>
+                  </Link>
+
+                  <div className="mt-[20px] flex items-center gap-[14px]">
+                    {product.oldPrice && (
+                      <span className="font-['Inter',sans-serif] text-[17px] font-normal leading-none tracking-[-0.03em] text-[#c9c9c6] line-through">
+                        {product.oldPrice}
+                      </span>
+                    )}
+
+                    <span className="font-['Inter',sans-serif] text-[17px] font-medium leading-none tracking-[-0.03em] text-[#151515]">
+                      {product.price}
+                    </span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* ==================== Product pagination ==================== */}
+
+          <div
+            className={`mt-[78px] flex items-center justify-center gap-[10px] transition-all delay-[260ms] duration-[900ms] ease-out max-[640px]:mt-[58px] ${
+              curatedVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[26px] opacity-0"
+            }`}
+          >
+            <button
+              type="button"
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="inline-flex h-[28px] min-w-[28px] cursor-pointer items-center justify-center border-0 bg-[#f1eee5] px-[8px] text-[12px] font-medium text-[#9a968f] transition-all duration-300 hover:bg-[#151515] hover:text-white disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              «
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="inline-flex h-[28px] min-w-[28px] cursor-pointer items-center justify-center border-0 bg-[#f1eee5] px-[8px] text-[12px] font-medium text-[#9a968f] transition-all duration-300 hover:bg-[#151515] hover:text-white disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              ‹
+            </button>
+
+            {Array.from(
+              {
+                length: totalPages,
+              },
+              (_, index) => index + 1
+            )
+              .filter((page) => {
+                return (
+                  page === 1 ||
+                  page === totalPages ||
+                  Math.abs(page - currentPage) <= 1
+                );
+              })
+              .map((page, index, pages) => {
+                const previousPage = pages[index - 1];
+                const shouldShowDots =
+                  previousPage && page - previousPage > 1;
+
+                return (
+                  <div
+                    key={page}
+                    className="flex items-center gap-[10px]"
+                  >
+                    {shouldShowDots && (
+                      <span className="text-[12px] font-medium text-[#8c887f]">
+                        ...
+                      </span>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => handlePageChange(page)}
+                      className={`inline-flex h-[28px] min-w-[28px] cursor-pointer items-center justify-center border-0 px-[8px] text-[12px] font-medium transition-all duration-300 ${
+                        page === currentPage
+                          ? "bg-[#8c877d] text-white"
+                          : "bg-transparent text-[#6f6b64] hover:bg-[#151515] hover:text-white"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  </div>
+                );
+              })}
+
+            <button
+              type="button"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="inline-flex h-[28px] min-w-[28px] cursor-pointer items-center justify-center border-0 bg-[#f1eee5] px-[8px] text-[12px] font-medium text-[#9a968f] transition-all duration-300 hover:bg-[#151515] hover:text-white disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              ›
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="inline-flex h-[28px] min-w-[28px] cursor-pointer items-center justify-center border-0 bg-[#f1eee5] px-[8px] text-[12px] font-medium text-[#9a968f] transition-all duration-300 hover:bg-[#151515] hover:text-white disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              »
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== Shop redesign CTA section ==================== */}
+
+      <RedesignCTA />
     </main>
   );
 };
