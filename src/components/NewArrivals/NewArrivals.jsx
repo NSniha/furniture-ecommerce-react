@@ -28,6 +28,7 @@ const WISHLIST_ITEMS_KEY = "decoristWishlistItems";
 const WISHLIST_COUNT_KEY = "decoristWishlistCount";
 
 const COUNT_UPDATE_EVENT = "decorist-counts-updated";
+const CART_ADDED_EVENT = "decorist-cart-item-added";
 
 const products = [
   {
@@ -133,7 +134,12 @@ const getProductPayload = (product) => {
   };
 };
 
-const NewArrivals = () => {
+const NewArrivals = ({
+  sectionNumber = "//04",
+  sectionLabel = "/New Arrivals",
+  showViewButton = true,
+  centeredHeading = false,
+}) => {
   const sectionRef = useRef(null);
   const sliderRef = useRef(null);
 
@@ -146,14 +152,26 @@ const NewArrivals = () => {
 
   const mobilePage = Math.min(2, Math.floor(activeCard / 2));
 
-  /* ==================== Initial wishlist state ==================== */
+  /* ==================== Wishlist state sync ==================== */
 
   useEffect(() => {
-    const wishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
+    const syncWishlistState = () => {
+      const wishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
 
-    setWishlistIds(
-      wishlistItems.map((item) => Number(item.id))
-    );
+      setWishlistIds(
+        wishlistItems.map((item) => Number(item.id))
+      );
+    };
+
+    syncWishlistState();
+
+    window.addEventListener("storage", syncWishlistState);
+    window.addEventListener(COUNT_UPDATE_EVENT, syncWishlistState);
+
+    return () => {
+      window.removeEventListener("storage", syncWishlistState);
+      window.removeEventListener(COUNT_UPDATE_EVENT, syncWishlistState);
+    };
   }, []);
 
   /* ==================== Section reveal observer ==================== */
@@ -258,6 +276,8 @@ const NewArrivals = () => {
     });
   };
 
+  /* ==================== Mobile slide navigation ==================== */
+
   const handleMobilePage = (pageIndex) => {
     const slider = sliderRef.current;
 
@@ -279,6 +299,7 @@ const NewArrivals = () => {
 
   const handleWishlistToggle = (product) => {
     const wishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
+
     const alreadyExists = wishlistItems.some((item) => {
       return Number(item.id) === Number(product.id);
     });
@@ -337,7 +358,7 @@ const NewArrivals = () => {
     updateCount(CART_COUNT_KEY, getTotalCartQuantity(nextCartItems));
 
     window.dispatchEvent(
-      new CustomEvent("decorist-cart-item-added", {
+      new CustomEvent(CART_ADDED_EVENT, {
         detail: getProductPayload(product),
       })
     );
@@ -359,19 +380,27 @@ const NewArrivals = () => {
           }`}
         >
           <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
-            //04
+            {sectionNumber}
           </p>
 
           <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
-            /New Arrivals
+            {sectionLabel}
           </p>
         </div>
 
         {/* ==================== Section heading ==================== */}
 
-        <div className="mb-[72px] flex items-center justify-between gap-10 max-[1024px]:mb-14 max-[1024px]:items-start max-[768px]:mb-11 max-[768px]:flex-col max-[768px]:gap-7">
+        <div
+          className={`mb-[72px] flex items-center gap-10 max-[1024px]:mb-14 max-[768px]:mb-11 max-[768px]:flex-col max-[768px]:gap-7 ${
+            centeredHeading
+              ? "justify-center text-center"
+              : "justify-between max-[1024px]:items-start"
+          }`}
+        >
           <h2
             className={`arrivals-reveal m-0 font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-[0.95] tracking-[-0.058em] text-[#111111] transition-all delay-[120ms] duration-[850ms] ease-out max-[768px]:text-[clamp(48px,14vw,68px)] max-[768px]:leading-none max-[480px]:text-[46px] ${
+              centeredHeading ? "mx-auto" : ""
+            } ${
               visible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-7 opacity-0"
@@ -380,18 +409,20 @@ const NewArrivals = () => {
             fresh finds just in
           </h2>
 
-          <Link
-            to="/shop"
-            className={`arrivals-reveal inline-flex h-[54px] w-fit shrink-0 items-center gap-[22px] rounded-[3px] border border-[#5d5d5d] bg-transparent px-6 font-['Inter',sans-serif] text-[15px] font-medium uppercase leading-none tracking-[-0.01em] text-[#151515] no-underline transition-all delay-[220ms] duration-300 hover:border-[#151515] hover:bg-[#151515] hover:text-white max-[768px]:h-[50px] max-[768px]:gap-[18px] max-[768px]:px-5 max-[768px]:text-[13px] ${
-              visible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-7 opacity-0"
-            }`}
-          >
-            <span>See All Products</span>
+          {showViewButton && (
+            <Link
+              to="/shop"
+              className={`arrivals-reveal inline-flex h-[54px] w-fit shrink-0 items-center gap-[22px] rounded-[3px] border border-[#5d5d5d] bg-transparent px-6 font-['Inter',sans-serif] text-[15px] font-medium uppercase leading-none tracking-[-0.01em] text-[#151515] no-underline transition-all delay-[220ms] duration-300 hover:border-[#151515] hover:bg-[#151515] hover:text-white max-[768px]:h-[50px] max-[768px]:gap-[18px] max-[768px]:px-5 max-[768px]:text-[13px] ${
+                visible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-7 opacity-0"
+              }`}
+            >
+              <span>See All Products</span>
 
-            <ArrowRight size={25} strokeWidth={1.55} />
-          </Link>
+              <ArrowRight size={25} strokeWidth={1.55} />
+            </Link>
+          )}
         </div>
 
         {/* ==================== Product slider ==================== */}
