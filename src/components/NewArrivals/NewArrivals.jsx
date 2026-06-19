@@ -1,5 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Eye,
+  Heart,
+  ShoppingCart,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import productOne from "../../assets/images/new-arrival-1.jpg";
@@ -11,56 +21,117 @@ import productSix from "../../assets/images/new-arrival-6.jpg";
 
 import "./NewArrivals.css";
 
+const CART_ITEMS_KEY = "decoristCartItems";
+const CART_COUNT_KEY = "decoristCartCount";
+
+const WISHLIST_ITEMS_KEY = "decoristWishlistItems";
+const WISHLIST_COUNT_KEY = "decoristWishlistCount";
+
+const COUNT_UPDATE_EVENT = "decorist-counts-updated";
+
 const products = [
   {
     id: 1,
+    slug: "marble-inlay-coffee-table",
     image: productOne,
     category: "Living Room",
     title: "Marble-Inlay Coffee Table",
     oldPrice: "$299",
     price: "$249",
+    quantity: 1,
   },
   {
     id: 2,
+    slug: "nordic-pendant-light",
     image: productTwo,
     category: "Lighting",
     title: "Nordic Pendant Light",
     oldPrice: "",
     price: "$89",
+    quantity: 1,
   },
   {
     id: 3,
+    slug: "rattan-accent-chair",
     image: productThree,
     category: "Bedroom",
     title: "Rattan Accent Chair",
     oldPrice: "$159",
     price: "$139",
+    quantity: 1,
   },
   {
     id: 4,
+    slug: "abstract-wall-frame-set",
     image: productFour,
     category: "Wall Art",
     title: "Abstract Wall Frame Set",
     oldPrice: "",
     price: "$75",
+    quantity: 1,
   },
   {
     id: 5,
+    slug: "boho-patterned-rug",
     image: productFive,
     category: "Rugs & Carpets",
     title: "Boho Patterned Rug",
     oldPrice: "$210",
     price: "$179",
+    quantity: 1,
   },
   {
     id: 6,
+    slug: "minimal-wooden-desk",
     image: productSix,
     category: "Office",
     title: "Minimal Wooden Desk",
     oldPrice: "$350",
     price: "$299",
+    quantity: 1,
   },
 ];
+
+/* ==================== Local storage helpers ==================== */
+
+const getStoredItems = (key) => {
+  try {
+    const savedItems = JSON.parse(localStorage.getItem(key));
+
+    return Array.isArray(savedItems) ? savedItems : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveStoredItems = (key, items) => {
+  localStorage.setItem(key, JSON.stringify(items));
+};
+
+const updateCount = (key, count) => {
+  localStorage.setItem(key, String(count));
+
+  window.dispatchEvent(new Event(COUNT_UPDATE_EVENT));
+};
+
+const getTotalCartQuantity = (items) => {
+  return items.reduce((total, item) => {
+    return total + Number(item.quantity || 1);
+  }, 0);
+};
+
+const getProductPayload = (product) => {
+  return {
+    id: product.id,
+    slug: product.slug,
+    image: product.image,
+    category: product.category,
+    title: product.title,
+    oldPrice: product.oldPrice,
+    price: product.price,
+    quantity: 1,
+  };
+};
 
 const NewArrivals = () => {
   const sectionRef = useRef(null);
@@ -71,8 +142,19 @@ const NewArrivals = () => {
   const [activeCard, setActiveCard] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
+  const [wishlistIds, setWishlistIds] = useState([]);
 
   const mobilePage = Math.min(2, Math.floor(activeCard / 2));
+
+  /* ==================== Initial wishlist state ==================== */
+
+  useEffect(() => {
+    const wishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
+
+    setWishlistIds(
+      wishlistItems.map((item) => Number(item.id))
+    );
+  }, []);
 
   /* ==================== Section reveal observer ==================== */
 
@@ -193,6 +275,74 @@ const NewArrivals = () => {
     });
   };
 
+  /* ==================== Wishlist action ==================== */
+
+  const handleWishlistToggle = (product) => {
+    const wishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
+    const alreadyExists = wishlistItems.some((item) => {
+      return Number(item.id) === Number(product.id);
+    });
+
+    let nextWishlistItems;
+
+    if (alreadyExists) {
+      nextWishlistItems = wishlistItems.filter((item) => {
+        return Number(item.id) !== Number(product.id);
+      });
+    } else {
+      nextWishlistItems = [
+        ...wishlistItems,
+        getProductPayload(product),
+      ];
+    }
+
+    saveStoredItems(WISHLIST_ITEMS_KEY, nextWishlistItems);
+    updateCount(WISHLIST_COUNT_KEY, nextWishlistItems.length);
+
+    setWishlistIds(
+      nextWishlistItems.map((item) => Number(item.id))
+    );
+  };
+
+  /* ==================== Add to cart action ==================== */
+
+  const handleAddToCart = (product) => {
+    const cartItems = getStoredItems(CART_ITEMS_KEY);
+
+    const existingProduct = cartItems.find((item) => {
+      return Number(item.id) === Number(product.id);
+    });
+
+    let nextCartItems;
+
+    if (existingProduct) {
+      nextCartItems = cartItems.map((item) => {
+        if (Number(item.id) !== Number(product.id)) {
+          return item;
+        }
+
+        return {
+          ...item,
+          quantity: Number(item.quantity || 1) + 1,
+        };
+      });
+    } else {
+      nextCartItems = [
+        ...cartItems,
+        getProductPayload(product),
+      ];
+    }
+
+    saveStoredItems(CART_ITEMS_KEY, nextCartItems);
+    updateCount(CART_COUNT_KEY, getTotalCartQuantity(nextCartItems));
+
+    window.dispatchEvent(
+      new CustomEvent("decorist-cart-item-added", {
+        detail: getProductPayload(product),
+      })
+    );
+  };
+
   return (
     <section
       ref={sectionRef}
@@ -257,48 +407,111 @@ const NewArrivals = () => {
             ref={sliderRef}
             className="arrivals-slider flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-hidden scroll-smooth pb-1 max-[480px]:gap-4"
           >
-            {products.map((product, index) => (
-              <Link
-                key={product.id}
-                to={`/shop-details/${product.id}`}
-                aria-label={`View ${product.title} details`}
-                className="arrival-card group block flex-[0_0_270px] snap-start text-inherit no-underline max-[1280px]:flex-[0_0_255px] max-[1024px]:flex-[0_0_250px] max-[768px]:flex-[0_0_245px] max-[480px]:flex-[0_0_78%]"
-              >
-                <div className="mb-3 font-['Inter',sans-serif] text-[14px] font-medium leading-none tracking-[-0.035em] text-[#5e5e5e] max-[480px]:mb-4 max-[480px]:text-[17px] max-[480px]:font-semibold">
-                  //{String(index + 1).padStart(3, "0")}
-                </div>
+            {products.map((product, index) => {
+              const isWishlisted = wishlistIds.includes(Number(product.id));
 
-                <div className="h-[326px] w-full overflow-hidden bg-[#e3ded4] max-[1280px]:h-[306px] max-[1024px]:h-[300px] max-[768px]:h-[292px] max-[480px]:h-[340px] max-[420px]:h-[320px]">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="block h-full w-full object-cover object-center transition-transform duration-[1100ms] ease-out group-hover:scale-[1.045]"
-                  />
-                </div>
-
-                <div className="pt-[26px] max-[768px]:pt-[22px] max-[480px]:pt-7">
-                  <p className="mb-[14px] mt-0 font-['Inter',sans-serif] text-[16.5px] font-semibold leading-none tracking-[-0.035em] text-[#74746f] max-[480px]:text-[15px]">
-                    {product.category}
-                  </p>
-
-                  <h3 className="mb-[22px] mt-0 w-fit font-['Inter',sans-serif] text-[15.5px] font-semibold uppercase leading-[1.2] tracking-[-0.035em] text-[#151515] underline decoration-[1.5px] underline-offset-[3px] max-[480px]:text-[15px]">
-                    {product.title}
-                  </h3>
-
-                  <div className="flex items-center gap-[18px]">
-                    {product.oldPrice && (
-                      <span className="font-['Inter',sans-serif] text-[19px] font-normal leading-none tracking-[-0.03em] text-[#c7c7c4] line-through max-[480px]:text-[18px]">
-                        {product.oldPrice}
-                      </span>
-                    )}
-
-                    <span className="font-['Inter',sans-serif] text-[19px] font-medium leading-none tracking-[-0.03em] text-[#151515] max-[480px]:text-[18px]">
-                      {product.price}
-                    </span>
+              return (
+                <article
+                  key={product.id}
+                  className="arrival-card group block flex-[0_0_270px] snap-start text-inherit max-[1280px]:flex-[0_0_255px] max-[1024px]:flex-[0_0_250px] max-[768px]:flex-[0_0_245px] max-[480px]:flex-[0_0_78%]"
+                >
+                  <div className="mb-3 font-['Inter',sans-serif] text-[14px] font-medium leading-none tracking-[-0.035em] text-[#5e5e5e] max-[480px]:mb-4 max-[480px]:text-[17px] max-[480px]:font-semibold">
+                    //{String(index + 1).padStart(3, "0")}
                   </div>
-                </div>
-              </Link>
-            ))}
+
+                  <div className="relative h-[326px] w-full overflow-hidden bg-[#e3ded4] max-[1280px]:h-[306px] max-[1024px]:h-[300px] max-[768px]:h-[292px] max-[480px]:h-[340px] max-[420px]:h-[320px]">
+                    <Link
+                      to={`/shop-details/${product.id}`}
+                      aria-label={`View ${product.title} details`}
+                      className="block h-full w-full text-inherit no-underline"
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="block h-full w-full object-cover object-center transition-transform duration-[1100ms] ease-out group-hover:scale-[1.045]"
+                      />
+                    </Link>
+
+                    <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/[0.08]" />
+
+                    {/* ==================== Product hover actions ==================== */}
+
+                    <div className="absolute right-4 top-4 z-10 flex translate-x-4 flex-col gap-3 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0 group-hover:opacity-100 max-[1024px]:translate-x-0 max-[1024px]:opacity-100 max-[480px]:right-3 max-[480px]:top-3 max-[480px]:gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => handleWishlistToggle(product)}
+                        aria-label={
+                          isWishlisted
+                            ? `Remove ${product.title} from wishlist`
+                            : `Add ${product.title} to wishlist`
+                        }
+                        className={`inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border p-0 shadow-[0_12px_28px_rgba(0,0,0,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 max-[480px]:h-10 max-[480px]:w-10 ${
+                          isWishlisted
+                            ? "border-[#151515] bg-[#151515] text-white"
+                            : "border-white/80 bg-white/95 text-[#151515] hover:bg-[#151515] hover:text-white"
+                        }`}
+                      >
+                        <Heart
+                          size={19}
+                          strokeWidth={1.55}
+                          fill={isWishlisted ? "currentColor" : "none"}
+                        />
+                      </button>
+
+                      <Link
+                        to={`/shop-details/${product.id}`}
+                        aria-label={`Quick view ${product.title}`}
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/80 bg-white/95 text-[#151515] no-underline shadow-[0_12px_28px_rgba(0,0,0,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-[#151515] hover:text-white max-[480px]:h-10 max-[480px]:w-10"
+                      >
+                        <Eye
+                          size={19}
+                          strokeWidth={1.55}
+                        />
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => handleAddToCart(product)}
+                        aria-label={`Add ${product.title} to cart`}
+                        className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/80 bg-white/95 p-0 text-[#151515] shadow-[0_12px_28px_rgba(0,0,0,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-[#151515] hover:text-white max-[480px]:h-10 max-[480px]:w-10"
+                      >
+                        <ShoppingCart
+                          size={19}
+                          strokeWidth={1.55}
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="pt-[26px] max-[768px]:pt-[22px] max-[480px]:pt-7">
+                    <p className="mb-[14px] mt-0 font-['Inter',sans-serif] text-[16.5px] font-semibold leading-none tracking-[-0.035em] text-[#74746f] max-[480px]:text-[15px]">
+                      {product.category}
+                    </p>
+
+                    <Link
+                      to={`/shop-details/${product.id}`}
+                      className="block w-fit text-inherit no-underline"
+                    >
+                      <h3 className="mb-[22px] mt-0 w-fit font-['Inter',sans-serif] text-[15.5px] font-semibold uppercase leading-[1.2] tracking-[-0.035em] text-[#151515] underline decoration-[1.5px] underline-offset-[3px] transition-colors duration-300 hover:text-[#6b665f] max-[480px]:text-[15px]">
+                        {product.title}
+                      </h3>
+                    </Link>
+
+                    <div className="flex items-center gap-[18px]">
+                      {product.oldPrice && (
+                        <span className="font-['Inter',sans-serif] text-[19px] font-normal leading-none tracking-[-0.03em] text-[#c7c7c4] line-through max-[480px]:text-[18px]">
+                          {product.oldPrice}
+                        </span>
+                      )}
+
+                      <span className="font-['Inter',sans-serif] text-[19px] font-medium leading-none tracking-[-0.03em] text-[#151515] max-[480px]:text-[18px]">
+                        {product.price}
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
 
