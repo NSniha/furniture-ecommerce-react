@@ -3,8 +3,144 @@ import {
   useRef,
   useState,
 } from "react";
+import {
+  Eye,
+  Heart,
+  ShoppingCart,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 import NewArrivals from "../../components/NewArrivals/NewArrivals";
+
+import featuredSofaImage from "../../assets/images/featured-sofa-shop.jpg";
+import featuredLampImage from "../../assets/images/featured-lamp-shop.jpg";
+import saleBlanketImage from "../../assets/images/sale-blanket-shop.jpg";
+import saleSconceImage from "../../assets/images/sale-sconce-shop.jpg";
+import saleTrayImage from "../../assets/images/sale-tray-shop.jpg";
+
+const CART_ITEMS_KEY = "decoristCartItems";
+const CART_COUNT_KEY = "decoristCartCount";
+
+const WISHLIST_ITEMS_KEY = "decoristWishlistItems";
+const WISHLIST_COUNT_KEY = "decoristWishlistCount";
+
+const COUNT_UPDATE_EVENT = "decorist-counts-updated";
+const CART_ADDED_EVENT = "decorist-cart-item-added";
+
+const featuredProducts = [
+  {
+    id: 101,
+    slug: "velvet-tufted-sofa",
+    image: featuredSofaImage,
+    category: "Living Room",
+    title: "Velvet Tufted Sofa",
+    price: "$520",
+    oldPrice: "",
+    quantity: 1,
+    features: [
+      "Premium fabric with plush seating",
+      "Available in 3 colors",
+    ],
+    description:
+      "Add a touch of luxury and comfort with this elegant velvet tufted sofa, perfect for relaxing and styling.",
+  },
+  {
+    id: 102,
+    slug: "industrial-floor-lamp",
+    image: featuredLampImage,
+    category: "Living Room",
+    title: "Industrial Floor Lamp",
+    price: "$120",
+    oldPrice: "",
+    quantity: 1,
+    features: [
+      "Adjustable height and angle",
+      "Warm ambient glow",
+    ],
+    description:
+      "Illuminate your home with this stylish floor lamp—both a lighting solution and a statement piece.",
+  },
+];
+
+const saleProducts = [
+  {
+    id: 201,
+    slug: "geometric-woven-blanket",
+    image: saleBlanketImage,
+    category: "Bedroom",
+    title: "Geometric Woven Blanket",
+    discount: "20% OFF",
+    price: "$96",
+    oldPrice: "$120",
+    quantity: 1,
+  },
+  {
+    id: 202,
+    slug: "glass-globe-wall-sconce-set",
+    image: saleSconceImage,
+    category: "Lighting",
+    title: "Glass Globe Wall Sconce Set",
+    discount: "25% OFF",
+    price: "$135",
+    oldPrice: "$180",
+    quantity: 1,
+  },
+  {
+    id: 203,
+    slug: "terrazzo-decorative-tray",
+    image: saleTrayImage,
+    category: "Kitchen & Dining",
+    title: "Terrazzo Decorative Tray",
+    discount: "18% OFF",
+    price: "$82",
+    oldPrice: "$100",
+    quantity: 1,
+  },
+];
+
+/* ==================== Storage helpers ==================== */
+
+const getStoredItems = (key) => {
+  try {
+    const savedItems = JSON.parse(localStorage.getItem(key));
+
+    return Array.isArray(savedItems) ? savedItems : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveStoredItems = (key, items) => {
+  localStorage.setItem(key, JSON.stringify(items));
+};
+
+const updateCount = (key, count) => {
+  localStorage.setItem(key, String(count));
+
+  window.dispatchEvent(new Event(COUNT_UPDATE_EVENT));
+};
+
+const getTotalCartQuantity = (items) => {
+  return items.reduce((total, item) => {
+    return total + Number(item.quantity || 1);
+  }, 0);
+};
+
+const getProductPayload = (product) => {
+  return {
+    id: product.id,
+    slug: product.slug,
+    image: product.image,
+    category: product.category,
+    title: product.title,
+    oldPrice: product.oldPrice || "",
+    price: product.price,
+    discount: product.discount || "",
+    quantity: 1,
+  };
+};
+
+/* ==================== Section reveal hook ==================== */
 
 const useSectionReveal = (threshold = 0.14) => {
   const sectionRef = useRef(null);
@@ -44,6 +180,158 @@ const Shop = () => {
     visible: heroVisible,
   } = useSectionReveal(0.12);
 
+  const {
+    sectionRef: featuredRef,
+    visible: featuredVisible,
+  } = useSectionReveal(0.1);
+
+  const [wishlistIds, setWishlistIds] = useState([]);
+
+  /* ==================== Wishlist state sync ==================== */
+
+  useEffect(() => {
+    const syncWishlistState = () => {
+      const wishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
+
+      setWishlistIds(
+        wishlistItems.map((item) => Number(item.id))
+      );
+    };
+
+    syncWishlistState();
+
+    window.addEventListener("storage", syncWishlistState);
+    window.addEventListener(COUNT_UPDATE_EVENT, syncWishlistState);
+
+    return () => {
+      window.removeEventListener("storage", syncWishlistState);
+      window.removeEventListener(COUNT_UPDATE_EVENT, syncWishlistState);
+    };
+  }, []);
+
+  /* ==================== Wishlist action ==================== */
+
+  const handleWishlistToggle = (product) => {
+    const wishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
+
+    const alreadyExists = wishlistItems.some((item) => {
+      return Number(item.id) === Number(product.id);
+    });
+
+    let nextWishlistItems;
+
+    if (alreadyExists) {
+      nextWishlistItems = wishlistItems.filter((item) => {
+        return Number(item.id) !== Number(product.id);
+      });
+    } else {
+      nextWishlistItems = [
+        ...wishlistItems,
+        getProductPayload(product),
+      ];
+    }
+
+    saveStoredItems(WISHLIST_ITEMS_KEY, nextWishlistItems);
+    updateCount(WISHLIST_COUNT_KEY, nextWishlistItems.length);
+
+    setWishlistIds(
+      nextWishlistItems.map((item) => Number(item.id))
+    );
+  };
+
+  /* ==================== Add to cart action ==================== */
+
+  const handleAddToCart = (product) => {
+    const cartItems = getStoredItems(CART_ITEMS_KEY);
+
+    const existingProduct = cartItems.find((item) => {
+      return Number(item.id) === Number(product.id);
+    });
+
+    let nextCartItems;
+
+    if (existingProduct) {
+      nextCartItems = cartItems.map((item) => {
+        if (Number(item.id) !== Number(product.id)) {
+          return item;
+        }
+
+        return {
+          ...item,
+          quantity: Number(item.quantity || 1) + 1,
+        };
+      });
+    } else {
+      nextCartItems = [
+        ...cartItems,
+        getProductPayload(product),
+      ];
+    }
+
+    saveStoredItems(CART_ITEMS_KEY, nextCartItems);
+    updateCount(CART_COUNT_KEY, getTotalCartQuantity(nextCartItems));
+
+    window.dispatchEvent(
+      new CustomEvent(CART_ADDED_EVENT, {
+        detail: getProductPayload(product),
+      })
+    );
+  };
+
+  /* ==================== Product action buttons ==================== */
+
+  const renderProductActions = (product) => {
+    const isWishlisted = wishlistIds.includes(Number(product.id));
+
+    return (
+      <div className="absolute right-4 top-4 z-20 flex translate-x-4 flex-col gap-3 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0 group-hover:opacity-100 max-[1024px]:translate-x-0 max-[1024px]:opacity-100 max-[480px]:right-3 max-[480px]:top-3 max-[480px]:gap-2.5">
+        <button
+          type="button"
+          onClick={() => handleWishlistToggle(product)}
+          aria-label={
+            isWishlisted
+              ? `Remove ${product.title} from wishlist`
+              : `Add ${product.title} to wishlist`
+          }
+          className={`inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border p-0 shadow-[0_12px_28px_rgba(0,0,0,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 max-[480px]:h-10 max-[480px]:w-10 ${
+            isWishlisted
+              ? "border-[#151515] bg-[#151515] text-white"
+              : "border-white/80 bg-white/95 text-[#151515] hover:bg-[#151515] hover:text-white"
+          }`}
+        >
+          <Heart
+            size={19}
+            strokeWidth={1.55}
+            fill={isWishlisted ? "currentColor" : "none"}
+          />
+        </button>
+
+        <Link
+          to={`/shop-details/${product.id}`}
+          aria-label={`View ${product.title} details`}
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/80 bg-white/95 text-[#151515] no-underline shadow-[0_12px_28px_rgba(0,0,0,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-[#151515] hover:text-white max-[480px]:h-10 max-[480px]:w-10"
+        >
+          <Eye
+            size={19}
+            strokeWidth={1.55}
+          />
+        </Link>
+
+        <button
+          type="button"
+          onClick={() => handleAddToCart(product)}
+          aria-label={`Add ${product.title} to cart`}
+          className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/80 bg-white/95 p-0 text-[#151515] shadow-[0_12px_28px_rgba(0,0,0,0.12)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-[#151515] hover:text-white max-[480px]:h-10 max-[480px]:w-10"
+        >
+          <ShoppingCart
+            size={19}
+            strokeWidth={1.55}
+          />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <main className="w-full overflow-hidden bg-[#f8f8f6] text-[#151515]">
       {/* ==================== Shop hero section ==================== */}
@@ -53,8 +341,6 @@ const Shop = () => {
         className="w-full bg-[#f8f8f6] pb-[118px] pt-[70px] max-[1400px]:pb-[102px] max-[1400px]:pt-[62px] max-[1024px]:pb-[82px] max-[1024px]:pt-[56px] max-[640px]:pb-[64px] max-[640px]:pt-[46px]"
       >
         <div className="site-container">
-          {/* ==================== Shop hero heading ==================== */}
-
           <div
             className={`transition-all duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
               heroVisible
@@ -72,8 +358,6 @@ const Shop = () => {
               </span>
             </h1>
           </div>
-
-          {/* ==================== Shop hero description ==================== */}
 
           <div className="mt-[48px] flex justify-end max-[1024px]:mt-[42px] max-[768px]:justify-start max-[640px]:mt-[34px]">
             <p
@@ -98,6 +382,203 @@ const Shop = () => {
         showViewButton={false}
         centeredHeading
       />
+
+      {/* ==================== Featured products section ==================== */}
+
+      <section
+        ref={featuredRef}
+        className="w-full bg-[#f1eee5] pb-[118px] pt-[112px] max-[1400px]:pb-[100px] max-[1400px]:pt-[96px] max-[1024px]:pb-[82px] max-[1024px]:pt-[78px] max-[640px]:pb-[64px] max-[640px]:pt-[62px]"
+      >
+        <div className="site-container">
+          {/* ==================== Section labels ==================== */}
+
+          <div
+            className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              featuredVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[24px] opacity-0"
+            }`}
+          >
+            <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
+              //02
+            </p>
+
+            <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
+              /Featured Products
+            </p>
+          </div>
+
+          {/* ==================== Featured heading ==================== */}
+
+          <div className="mt-[72px] grid grid-cols-[0.95fr_1.05fr] items-end gap-[90px] max-[1180px]:gap-[60px] max-[900px]:grid-cols-1 max-[900px]:gap-[34px] max-[640px]:mt-[50px]">
+            <h2
+              className={`m-0 font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-[0.95] tracking-[-0.055em] text-[#151515] transition-all delay-[80ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[640px]:text-[clamp(44px,12vw,58px)] ${
+                featuredVisible
+                  ? "translate-x-0 opacity-100"
+                  : "-translate-x-[36px] opacity-0"
+              }`}
+            >
+              featured in
+            </h2>
+
+            <p
+              className={`m-0 max-w-[650px] text-[17px] font-normal leading-[1.55] tracking-[-0.02em] text-[#666666] transition-all delay-[150ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[640px]:text-[14px] ${
+                featuredVisible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-[30px] opacity-0"
+              }`}
+            >
+              Discover handpicked pieces our customers can’t stop talking
+              about, chosen for their style, quality, and charm.
+            </p>
+          </div>
+
+          {/* ==================== Featured product cards ==================== */}
+
+          <div className="mt-[44px] grid grid-cols-2 gap-[28px] max-[900px]:grid-cols-1 max-[640px]:mt-[38px]">
+            {featuredProducts.map((product, index) => (
+              <article
+                key={product.id}
+                style={{
+                  transitionDelay: `${220 + index * 120}ms`,
+                }}
+                className={`group transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  featuredVisible
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-[40px] opacity-0"
+                }`}
+              >
+                <div className="relative aspect-[708/506] overflow-hidden bg-[#ddd5c9]">
+                  <Link
+                    to={`/shop-details/${product.id}`}
+                    aria-label={`View ${product.title} details`}
+                    className="block h-full w-full"
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="h-full w-full object-cover object-center transition-transform duration-[1200ms] ease-out group-hover:scale-[1.045]"
+                    />
+                  </Link>
+
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/18 to-transparent" />
+
+                  <span className="absolute right-[34px] top-[34px] z-10 bg-white px-[19px] py-[13px] text-[14px] font-semibold leading-none tracking-[-0.01em] text-[#151515] max-[640px]:right-4 max-[640px]:top-4 max-[640px]:px-4 max-[640px]:py-[11px] max-[640px]:text-[12px]">
+                    {product.category}
+                  </span>
+
+                  {renderProductActions(product)}
+
+                  <div className="absolute bottom-[36px] left-[38px] z-10 max-[640px]:bottom-6 max-[640px]:left-6">
+                    <Link
+                      to={`/shop-details/${product.id}`}
+                      className="block text-white no-underline"
+                    >
+                      <h3 className="m-0 max-w-[570px] text-[32px] font-medium uppercase leading-[1.1] tracking-[-0.045em] underline decoration-[1.5px] underline-offset-[5px] max-[1180px]:text-[27px] max-[640px]:text-[22px]">
+                        {product.title}
+                      </h3>
+                    </Link>
+
+                    <p className="m-0 mt-[24px] w-fit text-[36px] font-normal leading-none tracking-[-0.045em] text-white underline decoration-[1.5px] underline-offset-[6px] max-[640px]:mt-4 max-[640px]:text-[28px]">
+                      {product.price}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-[30px] grid grid-cols-[0.9fr_1.1fr] gap-[36px] max-[1180px]:gap-6 max-[640px]:grid-cols-1 max-[640px]:gap-4">
+                  <ul className="m-0 flex list-disc flex-col gap-[11px] pl-[18px] text-[#151515]">
+                    {product.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="text-[15px] font-medium italic leading-[1.35] tracking-[-0.02em] max-[640px]:text-[14px]"
+                      >
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <p className="m-0 max-w-[360px] text-[15px] font-normal leading-[1.55] tracking-[-0.02em] text-[#666666] max-[640px]:max-w-full max-[640px]:text-[14px]">
+                    {product.description}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* ==================== Sale products heading ==================== */}
+
+          <div
+            className={`mx-auto mt-[160px] text-center transition-all delay-[360ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[1024px]:mt-[120px] max-[640px]:mt-[88px] ${
+              featuredVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[34px] opacity-0"
+            }`}
+          >
+            <h2 className="m-0 font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-none tracking-[-0.055em] text-[#151515] max-[640px]:text-[clamp(44px,12vw,58px)]">
+              sale products
+            </h2>
+          </div>
+
+          {/* ==================== Sale product grid ==================== */}
+
+          <div className="mt-[72px] grid grid-cols-3 gap-[45px] max-[1180px]:gap-[30px] max-[900px]:grid-cols-2 max-[640px]:mt-[52px] max-[640px]:grid-cols-1 max-[640px]:gap-[46px]">
+            {saleProducts.map((product, index) => (
+              <article
+                key={product.id}
+                style={{
+                  transitionDelay: `${460 + index * 110}ms`,
+                }}
+                className={`group transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  featuredVisible
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-[42px] opacity-0"
+                }`}
+              >
+                <p className="mb-[12px] mt-0 text-[16px] font-medium leading-none tracking-[-0.035em] text-[#5e5e5e]">
+                  //{String(index + 1).padStart(3, "0")}
+                </p>
+
+                <div className="relative aspect-[452/389] overflow-hidden bg-[#ddd5c9]">
+                  <Link
+                    to={`/shop-details/${product.id}`}
+                    aria-label={`View ${product.title} details`}
+                    className="block h-full w-full"
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="h-full w-full object-cover object-center transition-transform duration-[1200ms] ease-out group-hover:scale-[1.045]"
+                    />
+                  </Link>
+
+                  <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/[0.08]" />
+
+                  {renderProductActions(product)}
+                </div>
+
+                <div className="pt-[26px] max-[640px]:pt-[22px]">
+                  <p className="mb-[14px] mt-0 text-[16px] font-semibold leading-none tracking-[-0.035em] text-[#74746f] max-[640px]:text-[14px]">
+                    {product.category}
+                  </p>
+
+                  <Link
+                    to={`/shop-details/${product.id}`}
+                    className="block w-fit text-inherit no-underline"
+                  >
+                    <h3 className="m-0 text-[17px] font-semibold uppercase leading-[1.25] tracking-[-0.035em] text-[#151515] transition-colors duration-300 hover:text-[#6b665f] max-[640px]:text-[15px]">
+                      {product.title}
+                    </h3>
+                  </Link>
+
+                  <p className="m-0 mt-[26px] text-[28px] font-normal uppercase leading-none tracking-[-0.035em] text-[#ff0000] max-[640px]:mt-[22px] max-[640px]:text-[23px]">
+                    {product.discount}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
     </main>
   );
 };
