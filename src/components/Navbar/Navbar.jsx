@@ -19,6 +19,7 @@ import {
 } from "react-router-dom";
 
 import logoImage from "../../assets/images/logo-white.png";
+import { allProducts } from "../../data/shopProducts";
 
 const navItems = [
   {
@@ -52,16 +53,6 @@ const WISHLIST_COUNT_KEY = "decoristWishlistCount";
 const COUNT_UPDATE_EVENT = "decorist-counts-updated";
 const CART_ADDED_EVENT = "decorist-cart-item-added";
 
-const getSavedCount = (key) => {
-  const savedValue = Number(localStorage.getItem(key));
-
-  if (!Number.isFinite(savedValue) || savedValue < 0) {
-    return 0;
-  }
-
-  return savedValue;
-};
-
 const getStoredItems = (key) => {
   try {
     const savedItems = JSON.parse(localStorage.getItem(key));
@@ -76,10 +67,10 @@ const saveStoredItems = (key, items) => {
   localStorage.setItem(key, JSON.stringify(items));
 };
 
-const getCartQuantity = (items) => {
-  return items.reduce((total, item) => {
-    return total + Number(item.quantity || 1);
-  }, 0);
+const getProductFromData = (productId) => {
+  return allProducts.find((product) => {
+    return String(product.id) === String(productId);
+  });
 };
 
 const getPriceNumber = (price = "") => {
@@ -87,6 +78,80 @@ const getPriceNumber = (price = "") => {
   const numericPrice = Number(cleanPrice);
 
   return Number.isFinite(numericPrice) ? numericPrice : 0;
+};
+
+const getCartQuantity = (items) => {
+  return items.reduce((total, item) => {
+    return total + Number(item.quantity || 1);
+  }, 0);
+};
+
+const hydrateItem = (item) => {
+  const productFromData = getProductFromData(item.id);
+
+  return {
+    ...(productFromData || {}),
+    ...item,
+    id: item.id || productFromData?.id,
+    slug: item.slug || productFromData?.slug || "",
+    image: item.image || productFromData?.image || "",
+    category: item.category || productFromData?.category || "",
+    title: item.title || productFromData?.title || "Decorist Product",
+    price: item.price || productFromData?.price || "$0",
+    oldPrice: item.oldPrice || productFromData?.oldPrice || "",
+    discount: item.discount || productFromData?.discount || "",
+    description: item.description || productFromData?.description || "",
+    quantity: Math.max(1, Number(item.quantity || 1)),
+  };
+};
+
+const hydrateItems = (items) => {
+  return items
+    .filter((item) => item && item.id)
+    .map(hydrateItem);
+};
+
+const mergeCartItems = (items) => {
+  const mergedItems = [];
+
+  items.forEach((item) => {
+    const hydratedItem = hydrateItem(item);
+
+    const existingItem = mergedItems.find((cartItem) => {
+      return String(cartItem.id) === String(hydratedItem.id);
+    });
+
+    if (existingItem) {
+      existingItem.quantity =
+        Number(existingItem.quantity || 1) +
+        Number(hydratedItem.quantity || 1);
+    } else {
+      mergedItems.push(hydratedItem);
+    }
+  });
+
+  return mergedItems;
+};
+
+const mergeWishlistItems = (items) => {
+  const uniqueItems = [];
+
+  items.forEach((item) => {
+    const hydratedItem = {
+      ...hydrateItem(item),
+      quantity: 1,
+    };
+
+    const alreadyExists = uniqueItems.some((wishlistItem) => {
+      return String(wishlistItem.id) === String(hydratedItem.id);
+    });
+
+    if (!alreadyExists) {
+      uniqueItems.push(hydratedItem);
+    }
+  });
+
+  return uniqueItems;
 };
 
 const Navbar = () => {
@@ -129,36 +194,51 @@ const Navbar = () => {
   };
 
   const syncStorageState = () => {
-    const nextCartItems = getStoredItems(CART_ITEMS_KEY);
-    const nextWishlistItems = getStoredItems(WISHLIST_ITEMS_KEY);
+    const nextCartItems = mergeCartItems(
+      hydrateItems(getStoredItems(CART_ITEMS_KEY))
+    );
+
+    const nextWishlistItems = mergeWishlistItems(
+      hydrateItems(getStoredItems(WISHLIST_ITEMS_KEY))
+    );
+
+    const nextCartCount = getCartQuantity(nextCartItems);
+    const nextWishlistCount = nextWishlistItems.length;
+
+    saveStoredItems(CART_ITEMS_KEY, nextCartItems);
+    saveStoredItems(WISHLIST_ITEMS_KEY, nextWishlistItems);
+
+    localStorage.setItem(CART_COUNT_KEY, String(nextCartCount));
+    localStorage.setItem(WISHLIST_COUNT_KEY, String(nextWishlistCount));
 
     setCartItems(nextCartItems);
     setWishlistItems(nextWishlistItems);
-
-    setCartCount(getSavedCount(CART_COUNT_KEY));
-    setWishlistCount(getSavedCount(WISHLIST_COUNT_KEY));
+    setCartCount(nextCartCount);
+    setWishlistCount(nextWishlistCount);
   };
 
   const updateCartStorage = (items) => {
-    const nextCount = getCartQuantity(items);
+    const nextCartItems = mergeCartItems(items);
+    const nextCartCount = getCartQuantity(nextCartItems);
 
-    saveStoredItems(CART_ITEMS_KEY, items);
-    localStorage.setItem(CART_COUNT_KEY, String(nextCount));
+    saveStoredItems(CART_ITEMS_KEY, nextCartItems);
+    localStorage.setItem(CART_COUNT_KEY, String(nextCartCount));
 
-    setCartItems(items);
-    setCartCount(nextCount);
+    setCartItems(nextCartItems);
+    setCartCount(nextCartCount);
 
     window.dispatchEvent(new Event(COUNT_UPDATE_EVENT));
   };
 
   const updateWishlistStorage = (items) => {
-    const nextCount = items.length;
+    const nextWishlistItems = mergeWishlistItems(items);
+    const nextWishlistCount = nextWishlistItems.length;
 
-    saveStoredItems(WISHLIST_ITEMS_KEY, items);
-    localStorage.setItem(WISHLIST_COUNT_KEY, String(nextCount));
+    saveStoredItems(WISHLIST_ITEMS_KEY, nextWishlistItems);
+    localStorage.setItem(WISHLIST_COUNT_KEY, String(nextWishlistCount));
 
-    setWishlistItems(items);
-    setWishlistCount(nextCount);
+    setWishlistItems(nextWishlistItems);
+    setWishlistCount(nextWishlistCount);
 
     window.dispatchEvent(new Event(COUNT_UPDATE_EVENT));
   };
@@ -181,7 +261,7 @@ const Navbar = () => {
 
   const handleRemoveCartItem = (productId) => {
     const nextCartItems = cartItems.filter((item) => {
-      return Number(item.id) !== Number(productId);
+      return String(item.id) !== String(productId);
     });
 
     updateCartStorage(nextCartItems);
@@ -189,7 +269,7 @@ const Navbar = () => {
 
   const handleIncreaseQuantity = (productId) => {
     const nextCartItems = cartItems.map((item) => {
-      if (Number(item.id) !== Number(productId)) {
+      if (String(item.id) !== String(productId)) {
         return item;
       }
 
@@ -203,25 +283,34 @@ const Navbar = () => {
   };
 
   const handleDecreaseQuantity = (productId) => {
-    const nextCartItems = cartItems
-      .map((item) => {
-        if (Number(item.id) !== Number(productId)) {
-          return item;
-        }
+    const targetItem = cartItems.find((item) => {
+      return String(item.id) === String(productId);
+    });
 
-        return {
-          ...item,
-          quantity: Math.max(1, Number(item.quantity || 1) - 1),
-        };
-      })
-      .filter((item) => Number(item.quantity || 1) > 0);
+    if (!targetItem) return;
+
+    if (Number(targetItem.quantity || 1) <= 1) {
+      handleRemoveCartItem(productId);
+      return;
+    }
+
+    const nextCartItems = cartItems.map((item) => {
+      if (String(item.id) !== String(productId)) {
+        return item;
+      }
+
+      return {
+        ...item,
+        quantity: Number(item.quantity || 1) - 1,
+      };
+    });
 
     updateCartStorage(nextCartItems);
   };
 
   const handleRemoveWishlistItem = (productId) => {
     const nextWishlistItems = wishlistItems.filter((item) => {
-      return Number(item.id) !== Number(productId);
+      return String(item.id) !== String(productId);
     });
 
     updateWishlistStorage(nextWishlistItems);
@@ -230,40 +319,29 @@ const Navbar = () => {
   const handleMoveWishlistToCart = (product) => {
     const currentCartItems = getStoredItems(CART_ITEMS_KEY);
 
-    const existingProduct = currentCartItems.find((item) => {
-      return Number(item.id) === Number(product.id);
-    });
-
-    let nextCartItems;
-
-    if (existingProduct) {
-      nextCartItems = currentCartItems.map((item) => {
-        if (Number(item.id) !== Number(product.id)) {
-          return item;
-        }
-
-        return {
-          ...item,
-          quantity: Number(item.quantity || 1) + 1,
-        };
-      });
-    } else {
-      nextCartItems = [
-        ...currentCartItems,
-        {
-          ...product,
-          quantity: 1,
-        },
-      ];
-    }
+    const nextCartItems = [
+      ...currentCartItems,
+      {
+        ...hydrateItem(product),
+        quantity: 1,
+      },
+    ];
 
     const nextWishlistItems = wishlistItems.filter((item) => {
-      return Number(item.id) !== Number(product.id);
+      return String(item.id) !== String(product.id);
     });
 
     updateCartStorage(nextCartItems);
     updateWishlistStorage(nextWishlistItems);
     setActivePopup("cart");
+  };
+
+  const handleClearCart = () => {
+    updateCartStorage([]);
+  };
+
+  const handleClearWishlist = () => {
+    updateWishlistStorage([]);
   };
 
   useEffect(() => {
@@ -852,34 +930,45 @@ const Navbar = () => {
                 </p>
               </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-3">
+              <div className="mt-5 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={handleClearCart}
+                  className="inline-flex h-12 flex-1 cursor-pointer items-center justify-center border border-[#151515] bg-transparent px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-[#151515] transition-colors duration-300 hover:bg-[#151515] hover:text-white"
+                >
+                  Clear
+                </button>
+
                 <Link
                   to="/shop"
                   onClick={closePopup}
-                  className="inline-flex h-12 items-center justify-center border border-[#151515] bg-transparent px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-[#151515] no-underline transition-colors duration-300 hover:bg-[#151515] hover:text-white"
+                  className="inline-flex h-12 flex-1 items-center justify-center border border-[#151515] bg-[#151515] px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-white no-underline transition-colors duration-300 hover:bg-transparent hover:text-[#151515]"
                 >
                   Continue
                 </Link>
-
-                <button
-                  type="button"
-                  className="inline-flex h-12 cursor-pointer items-center justify-center border border-[#151515] bg-[#151515] px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-white transition-colors duration-300 hover:bg-transparent hover:text-[#151515]"
-                >
-                  Checkout
-                </button>
               </div>
             </div>
           )}
 
           {isWishlistPopupOpen && (
             <div className="border-t border-black/10 pt-5">
-              <Link
-                to="/shop"
-                onClick={closePopup}
-                className="inline-flex h-12 w-full items-center justify-center border border-[#151515] bg-[#151515] px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-white no-underline transition-colors duration-300 hover:bg-transparent hover:text-[#151515]"
-              >
-                Explore Products
-              </Link>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={handleClearWishlist}
+                  className="inline-flex h-12 cursor-pointer items-center justify-center border border-[#151515] bg-transparent px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-[#151515] transition-colors duration-300 hover:bg-[#151515] hover:text-white"
+                >
+                  Clear
+                </button>
+
+                <Link
+                  to="/shop"
+                  onClick={closePopup}
+                  className="inline-flex h-12 items-center justify-center border border-[#151515] bg-[#151515] px-4 text-[12px] font-semibold uppercase leading-none tracking-[-0.01em] text-white no-underline transition-colors duration-300 hover:bg-transparent hover:text-[#151515]"
+                >
+                  Explore
+                </Link>
+              </div>
             </div>
           )}
         </aside>
