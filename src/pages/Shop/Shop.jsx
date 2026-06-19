@@ -102,6 +102,7 @@ const useSectionReveal = (threshold = 0.14) => {
       },
       {
         threshold,
+        rootMargin: "0px 0px -8% 0px",
       }
     );
 
@@ -126,6 +127,11 @@ const Shop = () => {
     sectionRef: featuredRef,
     visible: featuredVisible,
   } = useSectionReveal(0.1);
+
+  const {
+    sectionRef: saleRef,
+    visible: saleVisible,
+  } = useSectionReveal(0.16);
 
   const {
     sectionRef: curatedRef,
@@ -321,7 +327,7 @@ const Shop = () => {
   };
 
   return (
-    <main className="w-full overflow-hidden bg-[#f8f8f6] text-[#151515]">
+    <main className="w-full overflow-hidden scroll-smooth bg-[#f8f8f6] text-[#151515]">
       {/* ==================== Shop hero section ==================== */}
 
       <section
@@ -428,9 +434,11 @@ const Shop = () => {
               <article
                 key={product.id}
                 style={{
-                  transitionDelay: `${220 + index * 120}ms`,
+                  transitionDelay: featuredVisible
+                    ? `${220 + index * 120}ms`
+                    : "0ms",
                 }}
-                className={`group transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                className={`group transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
                   featuredVisible
                     ? "translate-y-0 opacity-100"
                     : "translate-y-[40px] opacity-0"
@@ -493,77 +501,103 @@ const Shop = () => {
             ))}
           </div>
 
-          {/* ==================== Sale products heading ==================== */}
+          {/* ==================== Sale products section ==================== */}
 
           <div
-            className={`mx-auto mt-[160px] text-center transition-all delay-[360ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[1024px]:mt-[120px] max-[640px]:mt-[88px] ${
-              featuredVisible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-[34px] opacity-0"
-            }`}
+            id="sale-products"
+            ref={saleRef}
+            className="scroll-mt-[120px] mt-[160px] max-[1024px]:mt-[120px] max-[640px]:mt-[88px]"
           >
-            <h2 className="m-0 font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-none tracking-[-0.055em] text-[#151515] max-[640px]:text-[clamp(44px,12vw,58px)]">
-              sale products
-            </h2>
-          </div>
+            {/* ==================== Sale products heading ==================== */}
 
-          {/* ==================== Sale product grid ==================== */}
+            <div
+              className={`mx-auto text-center transition-all duration-[1050ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
+                saleVisible
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-[42px] opacity-0"
+              }`}
+            >
+              <h2 className="m-0 font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-none tracking-[-0.055em] text-[#151515] max-[640px]:text-[clamp(44px,12vw,58px)]">
+                sale products
+              </h2>
+            </div>
 
-          <div className="mt-[72px] grid grid-cols-3 gap-[45px] max-[1180px]:gap-[30px] max-[900px]:grid-cols-2 max-[640px]:mt-[52px] max-[640px]:grid-cols-1 max-[640px]:gap-[46px]">
-            {saleProducts.map((product, index) => (
-              <article
-                key={product.id}
-                style={{
-                  transitionDelay: `${460 + index * 110}ms`,
-                }}
-                className={`group transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  featuredVisible
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-[42px] opacity-0"
-                }`}
-              >
-                <p className="mb-[12px] mt-0 text-[16px] font-medium leading-none tracking-[-0.035em] text-[#5e5e5e]">
-                  //{String(index + 1).padStart(3, "0")}
-                </p>
+            {/* ==================== Sale product grid ==================== */}
 
-                <div className="relative aspect-[452/389] overflow-hidden bg-[#ddd5c9]">
-                  <Link
-                    to={`/shop-details/${product.id}`}
-                    aria-label={`View ${product.title} details`}
-                    className="block h-full w-full"
+            <div className="mt-[72px] grid grid-cols-3 gap-[45px] max-[1180px]:gap-[30px] max-[900px]:grid-cols-2 max-[640px]:mt-[52px] max-[640px]:grid-cols-1 max-[640px]:gap-[46px]">
+              {saleProducts.map((product, index) => (
+                <article
+                  key={product.id}
+                  style={{
+                    transitionDelay: saleVisible
+                      ? `${180 + index * 140}ms`
+                      : "0ms",
+                  }}
+                  className={`group transition-all duration-[1050ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
+                    saleVisible
+                      ? "translate-y-0 scale-100 opacity-100"
+                      : "translate-y-[58px] scale-[0.985] opacity-0"
+                  }`}
+                >
+                  <p
+                    className={`mb-[12px] mt-0 text-[16px] font-medium leading-none tracking-[-0.035em] text-[#5e5e5e] transition-all duration-[850ms] ease-out motion-reduce:transition-none ${
+                      saleVisible
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-3 opacity-0"
+                    }`}
                   >
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="h-full w-full object-cover object-center transition-transform duration-[1200ms] ease-out group-hover:scale-[1.045]"
-                    />
-                  </Link>
-
-                  <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/[0.08]" />
-
-                  {renderProductActions(product)}
-                </div>
-
-                <div className="pt-[26px] max-[640px]:pt-[22px]">
-                  <p className="mb-[14px] mt-0 text-[16px] font-semibold leading-none tracking-[-0.035em] text-[#74746f] max-[640px]:text-[14px]">
-                    {product.category}
+                    //{String(index + 1).padStart(3, "0")}
                   </p>
 
-                  <Link
-                    to={`/shop-details/${product.id}`}
-                    className="block w-fit text-inherit no-underline"
-                  >
-                    <h3 className="m-0 text-[17px] font-semibold uppercase leading-[1.25] tracking-[-0.035em] text-[#151515] transition-colors duration-300 hover:text-[#6b665f] max-[640px]:text-[15px]">
-                      {product.title}
-                    </h3>
-                  </Link>
+                  <div className="relative aspect-[452/389] overflow-hidden bg-[#ddd5c9]">
+                    <Link
+                      to={`/shop-details/${product.id}`}
+                      aria-label={`View ${product.title} details`}
+                      className="block h-full w-full"
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className={`h-full w-full object-cover object-center transition-all duration-[1250ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.045] motion-reduce:transition-none ${
+                          saleVisible
+                            ? "scale-100 opacity-100"
+                            : "scale-[1.06] opacity-0"
+                        }`}
+                      />
+                    </Link>
 
-                  <p className="m-0 mt-[26px] text-[28px] font-normal uppercase leading-none tracking-[-0.035em] text-[#ff0000] max-[640px]:mt-[22px] max-[640px]:text-[23px]">
-                    {product.discount}
-                  </p>
-                </div>
-              </article>
-            ))}
+                    <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/[0.08]" />
+
+                    {renderProductActions(product)}
+                  </div>
+
+                  <div
+                    className={`pt-[26px] transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[640px]:pt-[22px] ${
+                      saleVisible
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-[24px] opacity-0"
+                    }`}
+                  >
+                    <p className="mb-[14px] mt-0 text-[16px] font-semibold leading-none tracking-[-0.035em] text-[#74746f] max-[640px]:text-[14px]">
+                      {product.category}
+                    </p>
+
+                    <Link
+                      to={`/shop-details/${product.id}`}
+                      className="block w-fit text-inherit no-underline"
+                    >
+                      <h3 className="m-0 text-[17px] font-semibold uppercase leading-[1.25] tracking-[-0.035em] text-[#151515] transition-colors duration-300 hover:text-[#6b665f] max-[640px]:text-[15px]">
+                        {product.title}
+                      </h3>
+                    </Link>
+
+                    <p className="m-0 mt-[26px] text-[28px] font-normal uppercase leading-none tracking-[-0.035em] text-[#ff0000] transition-transform duration-300 group-hover:translate-x-1 max-[640px]:mt-[22px] max-[640px]:text-[23px]">
+                      {product.discount}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -663,9 +697,11 @@ const Shop = () => {
               <article
                 key={product.id}
                 style={{
-                  transitionDelay: `${120 + index * 45}ms`,
+                  transitionDelay: curatedVisible
+                    ? `${120 + index * 45}ms`
+                    : "0ms",
                 }}
-                className={`group transition-all duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                className={`group transition-all duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
                   curatedVisible
                     ? "translate-y-0 opacity-100"
                     : "translate-y-[34px] opacity-0"
