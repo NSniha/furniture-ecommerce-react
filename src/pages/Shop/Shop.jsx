@@ -16,6 +16,7 @@ import RedesignCTA from "../../components/RedesignCTA/RedesignCTA";
 
 import {
   featuredProducts,
+  normalizeCategory,
   saleProducts,
   shopCategories,
   shopProducts,
@@ -58,12 +59,24 @@ const getTotalCartQuantity = (items) => {
   }, 0);
 };
 
+const getUniqueProducts = (products = []) => {
+  return Array.from(
+    new Map(
+      products.map((product) => [
+        String(product.id),
+        product,
+      ])
+    ).values()
+  );
+};
+
 const getProductPayload = (product) => {
   return {
     id: product.id,
     slug: product.slug,
     image: product.image,
     category: product.category,
+    categoryKey: product.categoryKey || normalizeCategory(product.category),
     title: product.title,
     subtitle: product.subtitle || "",
     oldPrice: product.oldPrice || "",
@@ -78,7 +91,11 @@ const getProductPayload = (product) => {
     rating: product.rating || 4.8,
     reviews: product.reviews || 0,
     stock: product.stock || 0,
+    sku: product.sku || "",
     tags: product.tags || [],
+    gallery: product.gallery || [
+      product.image,
+    ],
   };
 };
 
@@ -145,12 +162,18 @@ const Shop = () => {
   const productsPerPage = 12;
 
   const filteredProducts = useMemo(() => {
-    if (activeCategory === "All") {
-      return shopProducts;
+    const uniqueProducts = getUniqueProducts(shopProducts);
+    const activeCategoryKey = normalizeCategory(activeCategory);
+
+    if (activeCategoryKey === "all") {
+      return uniqueProducts;
     }
 
-    return shopProducts.filter((product) => {
-      return product.category === activeCategory;
+    return uniqueProducts.filter((product) => {
+      const productCategoryKey =
+        product.categoryKey || normalizeCategory(product.category);
+
+      return productCategoryKey === activeCategoryKey;
     });
   }, [activeCategory]);
 
@@ -165,6 +188,14 @@ const Shop = () => {
 
     return filteredProducts.slice(startIndex, endIndex);
   }, [currentPage, filteredProducts]);
+
+  /* ==================== Page clamp when filter changes ==================== */
+
+  useEffect(() => {
+    setCurrentPage((previousPage) => {
+      return Math.min(previousPage, totalPages);
+    });
+  }, [totalPages]);
 
   /* ==================== Wishlist state sync ==================== */
 
@@ -508,8 +539,6 @@ const Shop = () => {
             ref={saleRef}
             className="scroll-mt-[120px] mt-[160px] max-[1024px]:mt-[120px] max-[640px]:mt-[88px]"
           >
-            {/* ==================== Sale products heading ==================== */}
-
             <div
               className={`mx-auto text-center transition-all duration-[1050ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
                 saleVisible
@@ -521,8 +550,6 @@ const Shop = () => {
                 sale products
               </h2>
             </div>
-
-            {/* ==================== Sale product grid ==================== */}
 
             <div className="mt-[72px] grid grid-cols-3 gap-[45px] max-[1180px]:gap-[30px] max-[900px]:grid-cols-2 max-[640px]:mt-[52px] max-[640px]:grid-cols-1 max-[640px]:gap-[46px]">
               {saleProducts.map((product, index) => (
@@ -610,8 +637,6 @@ const Shop = () => {
         className="w-full bg-[#fafaf8] pb-[122px] pt-[112px] max-[1400px]:pb-[104px] max-[1400px]:pt-[96px] max-[1024px]:pb-[84px] max-[1024px]:pt-[78px] max-[640px]:pb-[66px] max-[640px]:pt-[62px]"
       >
         <div className="site-container">
-          {/* ==================== Section labels ==================== */}
-
           <div
             className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
               curatedVisible
@@ -627,8 +652,6 @@ const Shop = () => {
               /Curated Products
             </p>
           </div>
-
-          {/* ==================== Curated heading ==================== */}
 
           <div className="mt-[72px] grid grid-cols-[0.95fr_1.05fr] items-end gap-[90px] max-[1180px]:gap-[58px] max-[900px]:grid-cols-1 max-[900px]:gap-[42px] max-[640px]:mt-[50px]">
             <h2
@@ -647,8 +670,6 @@ const Shop = () => {
               </span>
             </h2>
 
-            {/* ==================== Category filter navigation ==================== */}
-
             <div
               className={`flex flex-wrap items-center justify-end gap-x-[13px] gap-y-3 transition-all delay-[160ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[900px]:justify-start ${
                 curatedVisible
@@ -657,7 +678,8 @@ const Shop = () => {
               }`}
             >
               {shopCategories.map((category, index) => {
-                const isActive = category === activeCategory;
+                const isActive =
+                  normalizeCategory(category) === normalizeCategory(activeCategory);
 
                 return (
                   <div
@@ -687,10 +709,8 @@ const Shop = () => {
             </div>
           </div>
 
-          {/* ==================== Curated product grid ==================== */}
-
           <div
-            key={`${activeCategory}-${currentPage}`}
+            key={`${normalizeCategory(activeCategory)}-${currentPage}`}
             className="mt-[70px] grid grid-cols-4 gap-x-[34px] gap-y-[70px] max-[1280px]:gap-x-[28px] max-[1024px]:grid-cols-3 max-[900px]:grid-cols-2 max-[640px]:mt-[52px] max-[640px]:grid-cols-1 max-[640px]:gap-y-[48px]"
           >
             {visibleProducts.map((product, index) => (
@@ -761,8 +781,6 @@ const Shop = () => {
               </article>
             ))}
           </div>
-
-          {/* ==================== Product pagination ==================== */}
 
           <div
             className={`mt-[78px] flex items-center justify-center gap-[10px] transition-all delay-[260ms] duration-[900ms] ease-out max-[640px]:mt-[58px] ${
