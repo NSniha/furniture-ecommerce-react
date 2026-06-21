@@ -1,96 +1,167 @@
-# Decorist – Furniture & Home Decor Website
+<div align="center">
 
-**Decorist** is a modern, responsive furniture and home decor website built with **React** and **Tailwind CSS**. It showcases a curated collection of furniture and decor pieces designed to help visitors create warm, personal, and beautiful living spaces — a clean, production-ready front-end template for furniture stores, interior design studios, and home decor e-commerce brands.
+# Decorist — Furniture E-Commerce Website
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Site-1e2327?style=for-the-badge)](https://moonlit-pony-a475c9.netlify.app/)
-![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=black)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat&logo=vite&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat)
+A modern, fully responsive furniture and home decor e-commerce website built with React and Tailwind CSS.
 
-## Live Demo
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Netlify Status](https://img.shields.io/badge/Deployed%20on-Netlify-00C7B7?logo=netlify&logoColor=white)](https://www.netlify.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[https://moonlit-pony-a475c9.netlify.app/](https://moonlit-pony-a475c9.netlify.app/)
+[Live Demo](https://moonlit-pony-a475c9.netlify.app) &nbsp;|&nbsp; [Report an Issue](https://github.com/NSniha/furniture-ecommerce-react/issues) &nbsp;|&nbsp; [Request a Feature](https://github.com/NSniha/furniture-ecommerce-react/issues)
 
-## About the Project
+</div>
 
-Decorist is a front-end web application for a furniture and home decor brand. It's built to give visitors a smooth, visually engaging way to browse furniture collections, explore decor categories, and learn about the brand — all on a fast, fully responsive interface that works seamlessly across mobile, tablet, and desktop screens.
+---
 
-This project is ideal as a reference or starting point for:
+## About The Project
 
-- Furniture and home decor e-commerce websites
-- Interior design studio portfolios
-- Modern product showcase / catalog landing pages
-- React + Tailwind CSS front-end practice projects
+Decorist is a fully responsive **furniture e-commerce website** built with **React** and **Tailwind CSS**, designed to deliver a calm, premium online shopping experience for furniture and home decor. The project brings together a curated product catalog, a complete brand storytelling experience, and a conversion-focused shopping flow into a single, production-ready frontend.
 
-## Features
+The site is built around a simple idea: shopping for furniture online should feel as considered as the products themselves. From the homepage through product discovery, checkout flow, and customer support, every screen is designed with clarity, warmth, and accessible luxury in mind.
 
-- Clean, modern furniture and home decor themed UI
-- Fully responsive layout using fluid CSS units (no fixed-pixel breakpoints)
-- Multi-page navigation powered by React Router
-- Icon system built with Lucide React
-- Fast build and hot-reload development experience via Vite
-- Component-based React architecture for easy customization
-- SEO-friendly semantic markup and meta description for search visibility
+This project is a strong reference implementation for developers studying multi-page **React e-commerce architecture**, and a polished portfolio piece for demonstrating real-world frontend development, UI design, and responsive layout skills.
+
+**Keywords:** furniture e-commerce website, React e-commerce project, Tailwind CSS online store, responsive furniture store, home decor e-commerce, React shopping cart, frontend e-commerce template.
+
+---
+
+## Key Features
+
+**Home Page**
+- Hero section with brand introduction and call-to-action
+- Brand story and trust-building statistics (customer satisfaction, product rating, dispatch time)
+- Category navigation across Living Room, Bedroom, Kitchen & Dining, Office, Lighting, Rugs & Carpets, Wall Art, and Outdoor
+- New arrivals and featured product carousels
+- Customer testimonials and partner/brand trust section
+- Editorial-style blog section for design inspiration content
+
+**Shop Page**
+- Full product catalog with category-based filtering
+- Pagination across multiple product pages
+- Sale and featured product highlights
+
+**Product Detail Page**
+- Image gallery with multiple product views
+- Quantity selector and add-to-cart functionality
+- Wishlist support
+- Expandable product details, shipping information, and overview sections
+- Customer reviews with star ratings
+- Similar products recommendation section
+
+**About Page**
+- Brand mission and vision statements
+- Core values section
+- Company milestone timeline
+- Team member profiles
+
+**Contact Page**
+- Studio contact details (email, phone, address, hours)
+- Inquiry form with subject selection
+- FAQ accordion covering sizing, ordering, styling, delivery, and returns
+
+**Site-Wide**
+- Fully responsive design across mobile, tablet, and desktop
+- Newsletter signup
+- Consistent navigation, search, wishlist, and cart access across all pages
+- Clean, reusable, and scalable component architecture
+
+---
 
 ## Tech Stack
 
 | Category | Technology |
 |---|---|
-| Front-end Library | React 19 |
-| Styling | Tailwind CSS 4 |
-| Routing | React Router DOM 7 |
-| Icons | Lucide React |
+| Frontend Framework | React |
+| Styling | Tailwind CSS |
 | Build Tool | Vite |
-| Linting | ESLint |
+| Deployment | Netlify |
+| Version Control | Git and GitHub |
+
+---
 
 ## Getting Started
 
-Clone the repository and install dependencies:
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
 
 ```bash
-git clone https://github.com/NSniha/decorist-website.git
-cd decorist-website
+git clone https://github.com/NSniha/furniture-ecommerce-react.git
+cd furniture-ecommerce-react
 npm install
-```
-
-Run the development server:
-
-```bash
 npm run dev
 ```
 
-Build for production:
+The application will run locally at `http://localhost:5173` (or the port shown in your terminal).
+
+### Build for Production
 
 ```bash
 npm run build
 ```
 
-Preview the production build locally:
-
-```bash
-npm run preview
-```
+---
 
 ## Project Structure
 
 ```
-decorist-website/
-├── public/        # Static assets
-├── src/            # React components, pages, and styles
-├── index.html      # App entry HTML
-├── vite.config.js  # Vite configuration
-└── package.json    # Project dependencies and scripts
+furniture-ecommerce-react/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── pages/
+│   │   ├── Home/
+│   │   ├── About/
+│   │   ├── Shop/
+│   │   ├── ShopDetails/
+│   │   └── Contact/
+│   ├── context/
+│   ├── App.jsx
+│   └── main.jsx
+├── package.json
+└── README.md
 ```
 
-## Keywords
+---
 
-furniture website React Tailwind, home decor landing page, modern furniture store UI, responsive furniture website template, React Tailwind CSS e-commerce template, interior design website React
+## Roadmap
 
-## Author
+- User authentication and account management
+- Payment gateway integration
+- Order tracking
+- Dark mode support
+- Backend integration for live inventory and order management
 
-Built by [NSniha](https://github.com/NSniha) — freelance front-end developer specializing in React and Tailwind CSS websites for real estate, e-commerce, and furniture/home decor brands.
+See the [open issues](https://github.com/NSniha/furniture-ecommerce-react/issues) for a full list of proposed features.
+
+---
+
+## Contributing
+
+Contributions are welcome and appreciated.
+
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
 
 ## License
 
-This project is licensed under the MIT License.
+Distributed under the MIT License. See `LICENSE` for details.
+
+---
+
+## Contact
+
+Niha — [GitHub Profile](https://github.com/NSniha)
+
+Project Link: [https://github.com/NSniha/furniture-ecommerce-react](https://github.com/NSniha/furniture-ecommerce-react)
