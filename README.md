@@ -1,3 +1,4 @@
+<img width="1280" height="800" alt="decorist-banner" src="https://github.com/user-attachments/assets/91de4c46-f768-4a9c-acc5-14f5d3329072" />
 <div align="center">
 
 # Decorist — Furniture E-Commerce Website
