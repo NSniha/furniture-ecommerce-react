@@ -162,6 +162,7 @@ Distributed under the MIT License. See `LICENSE` for details.
 
 ## Contact
 
-Niha — [GitHub Profile](https://github.com/NSniha)
+Nobonita Saha Niha — [GitHub Profile](https://github.com/NSniha)
+Email: nobonitaniha3@gmail.com
 
 Project Link: [https://github.com/NSniha/furniture-ecommerce-react](https://github.com/NSniha/furniture-ecommerce-react)
