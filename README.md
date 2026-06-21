@@ -2,14 +2,14 @@
 
 # Decorist — Furniture E-Commerce Website
 
-A modern, responsive furniture e-commerce website built with React and Tailwind CSS.
+A modern, fully responsive furniture and home decor e-commerce website built with React and Tailwind CSS.
 
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Netlify Status](https://img.shields.io/badge/Deployed%20on-Netlify-00C7B7?logo=netlify&logoColor=white)](https://www.netlify.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Live Demo](https://your-decorist-site.netlify.app) &nbsp;|&nbsp; [Report an Issue](#) &nbsp;|&nbsp; [Request a Feature](#)
+[Live Demo](https://moonlit-pony-a475c9.netlify.app) &nbsp;|&nbsp; [Report an Issue](https://github.com/NSniha/furniture-ecommerce-react/issues) &nbsp;|&nbsp; [Request a Feature](https://github.com/NSniha/furniture-ecommerce-react/issues)
 
 </div>
 
@@ -17,23 +17,55 @@ A modern, responsive furniture e-commerce website built with React and Tailwind 
 
 ## About The Project
 
-Decorist is a fully responsive **furniture e-commerce website** built with **React** and **Tailwind CSS**. It provides a clean, fast, and intuitive online shopping experience for browsing and purchasing furniture and home decor products.
+Decorist is a fully responsive **furniture e-commerce website** built with **React** and **Tailwind CSS**, designed to deliver a calm, premium online shopping experience for furniture and home decor. The project brings together a curated product catalog, a complete brand storytelling experience, and a conversion-focused shopping flow into a single, production-ready frontend.
 
-This project demonstrates a production-ready **React e-commerce frontend**, focused on performance, clean component architecture, and modern UI/UX design. It is suitable as a reference implementation for developers building React-based online stores, and as a portfolio project showcasing frontend e-commerce development.
+The site is built around a simple idea: shopping for furniture online should feel as considered as the products themselves. From the homepage through product discovery, checkout flow, and customer support, every screen is designed with clarity, warmth, and accessible luxury in mind.
 
-**Keywords:** furniture e-commerce website, React e-commerce template, Tailwind CSS online store, responsive furniture store, React shopping cart, frontend e-commerce project.
+This project is a strong reference implementation for developers studying multi-page **React e-commerce architecture**, and a polished portfolio piece for demonstrating real-world frontend development, UI design, and responsive layout skills.
+
+**Keywords:** furniture e-commerce website, React e-commerce project, Tailwind CSS online store, responsive furniture store, home decor e-commerce, React shopping cart, frontend e-commerce template.
 
 ---
 
 ## Key Features
 
-- Product catalog with category-based browsing (living room, bedroom, dining, office)
-- Search and filter functionality by category and price
-- Shopping cart with real-time price calculation
-- Fully responsive layout across mobile, tablet, and desktop
+**Home Page**
+- Hero section with brand introduction and call-to-action
+- Brand story and trust-building statistics (customer satisfaction, product rating, dispatch time)
+- Category navigation across Living Room, Bedroom, Kitchen & Dining, Office, Lighting, Rugs & Carpets, Wall Art, and Outdoor
+- New arrivals and featured product carousels
+- Customer testimonials and partner/brand trust section
+- Editorial-style blog section for design inspiration content
+
+**Shop Page**
+- Full product catalog with category-based filtering
+- Pagination across multiple product pages
+- Sale and featured product highlights
+
+**Product Detail Page**
+- Image gallery with multiple product views
+- Quantity selector and add-to-cart functionality
+- Wishlist support
+- Expandable product details, shipping information, and overview sections
+- Customer reviews with star ratings
+- Similar products recommendation section
+
+**About Page**
+- Brand mission and vision statements
+- Core values section
+- Company milestone timeline
+- Team member profiles
+
+**Contact Page**
+- Studio contact details (email, phone, address, hours)
+- Inquiry form with subject selection
+- FAQ accordion covering sizing, ordering, styling, delivery, and returns
+
+**Site-Wide**
+- Fully responsive design across mobile, tablet, and desktop
+- Newsletter signup
+- Consistent navigation, search, wishlist, and cart access across all pages
 - Clean, reusable, and scalable component architecture
-- Optimized performance with fast page loads
-- Semantic, accessible HTML structure
 
 ---
 
@@ -49,16 +81,6 @@ This project demonstrates a production-ready **React e-commerce frontend**, focu
 
 ---
 
-## Screenshots
-
-Add real screenshots or a short screen recording here. Visual previews significantly increase engagement and credibility for visitors discovering this repository through search.
-
-| Home Page | Product Listing | Cart |
-|---|---|---|
-| ![Home](./screenshots/home.png) | ![Products](./screenshots/products.png) | ![Cart](./screenshots/cart.png) |
-
----
-
 ## Getting Started
 
 ### Prerequisites
@@ -69,8 +91,8 @@ Add real screenshots or a short screen recording here. Visual previews significa
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/decorist.git
-cd decorist
+git clone https://github.com/NSniha/furniture-ecommerce-react.git
+cd furniture-ecommerce-react
 npm install
 npm run dev
 ```
@@ -88,12 +110,17 @@ npm run build
 ## Project Structure
 
 ```
-decorist/
+furniture-ecommerce-react/
 ├── public/
 ├── src/
 │   ├── assets/
 │   ├── components/
 │   ├── pages/
+│   │   ├── Home/
+│   │   ├── About/
+│   │   ├── Shop/
+│   │   ├── ShopDetails/
+│   │   └── Contact/
 │   ├── context/
 │   ├── App.jsx
 │   └── main.jsx
@@ -105,13 +132,13 @@ decorist/
 
 ## Roadmap
 
-- Wishlist functionality
-- User authentication
+- User authentication and account management
 - Payment gateway integration
-- Product reviews and ratings
+- Order tracking
 - Dark mode support
+- Backend integration for live inventory and order management
 
-See the [open issues](https://github.com/yourusername/decorist/issues) for a full list of proposed features.
+See the [open issues](https://github.com/NSniha/furniture-ecommerce-react/issues) for a full list of proposed features.
 
 ---
 
@@ -135,7 +162,6 @@ Distributed under the MIT License. See `LICENSE` for details.
 
 ## Contact
 
-Your Name — your.email@example.com
+Niha — [GitHub Profile](https://github.com/NSniha)
 
-Project Link: [https://github.com/yourusername/decorist](https://github.com/yourusername/decorist)
-
+Project Link: [https://github.com/NSniha/furniture-ecommerce-react](https://github.com/NSniha/furniture-ecommerce-react)
