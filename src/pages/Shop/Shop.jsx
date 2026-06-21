@@ -119,7 +119,7 @@ const useSectionReveal = (threshold = 0.14) => {
       },
       {
         threshold,
-        rootMargin: "0px 0px -10% 0px",
+        rootMargin: "0px 0px -6% 0px",
       }
     );
 
@@ -153,7 +153,7 @@ const Shop = () => {
   const {
     sectionRef: curatedRef,
     visible: curatedVisible,
-  } = useSectionReveal(0.08);
+  } = useSectionReveal(0.01);
 
   const [wishlistIds, setWishlistIds] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
@@ -629,13 +629,7 @@ const Shop = () => {
         <div className="site-container">
           {/* ==================== Section labels ==================== */}
 
-          <div
-            className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              curatedVisible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-[24px] opacity-0"
-            }`}
-          >
+          <div className="flex items-center justify-between opacity-100">
             <p className="m-0 font-['Inter',sans-serif] text-[18px] font-normal leading-none tracking-[-0.025em] text-[#5f5f5f] max-[768px]:text-[15px]">
               //03
             </p>
@@ -648,13 +642,7 @@ const Shop = () => {
           {/* ==================== Curated heading ==================== */}
 
           <div className="mt-[72px] max-[640px]:mt-[50px]">
-            <h2
-              className={`m-0 max-w-[735px] font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-[1.05] tracking-[-0.055em] text-[#151515] transition-all delay-[90ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[900px]:max-w-[680px] max-[640px]:text-[clamp(44px,12vw,58px)] ${
-                curatedVisible
-                  ? "translate-x-0 opacity-100"
-                  : "-translate-x-[36px] opacity-0"
-              }`}
-            >
+            <h2 className="m-0 max-w-[735px] font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-[1.05] tracking-[-0.055em] text-[#151515] max-[900px]:max-w-[680px] max-[640px]:text-[clamp(44px,12vw,58px)]">
               <span className="block">
                 explore our curated
               </span>
@@ -667,13 +655,7 @@ const Shop = () => {
 
           {/* ==================== Category filter navigation ==================== */}
 
-          <div
-            className={`mt-[68px] flex flex-wrap items-center justify-end gap-x-[13px] gap-y-3 transition-all delay-[160ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[1024px]:mt-[54px] max-[900px]:justify-start max-[640px]:mt-[42px] ${
-              curatedVisible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-[30px] opacity-0"
-            }`}
-          >
+          <div className="mt-[68px] flex flex-wrap items-center justify-end gap-x-[13px] gap-y-3 max-[1024px]:mt-[54px] max-[900px]:justify-start max-[640px]:mt-[42px]">
             {shopCategories.map((category, index) => {
               const isActive =
                 normalizeCategory(category) === normalizeCategory(activeCategory);
@@ -709,7 +691,7 @@ const Shop = () => {
 
           <div
             key={`${normalizeCategory(activeCategory)}-${currentPage}`}
-            className="mt-[70px] grid grid-cols-4 gap-x-[34px] gap-y-[70px] max-[1280px]:gap-x-[28px] max-[1024px]:grid-cols-3 max-[900px]:grid-cols-2 max-[640px]:mt-[52px] max-[640px]:grid-cols-1 max-[640px]:gap-y-[48px]"
+            className="mt-[70px] grid grid-cols-4 gap-x-[34px] gap-y-[70px] opacity-100 max-[1280px]:gap-x-[28px] max-[1024px]:grid-cols-3 max-[900px]:grid-cols-2 max-[640px]:mt-[52px] max-[640px]:grid-cols-1 max-[640px]:gap-y-[48px]"
           >
             {visibleProducts.map((product, index) => (
               <article
@@ -719,7 +701,7 @@ const Shop = () => {
                     ? `${120 + index * 45}ms`
                     : "0ms",
                 }}
-                className={`group transition-all duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
+                className={`group transition-all duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none max-[640px]:translate-y-0 max-[640px]:opacity-100 ${
                   curatedVisible
                     ? "translate-y-0 opacity-100"
                     : "translate-y-[34px] opacity-0"
@@ -782,13 +764,7 @@ const Shop = () => {
 
           {/* ==================== Product pagination ==================== */}
 
-          <div
-            className={`mt-[78px] flex items-center justify-center gap-[10px] transition-all delay-[260ms] duration-[900ms] ease-out max-[640px]:mt-[58px] ${
-              curatedVisible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-[26px] opacity-0"
-            }`}
-          >
+          <div className="mt-[78px] flex items-center justify-center gap-[10px] opacity-100 max-[640px]:mt-[58px]">
             <button
               type="button"
               onClick={() => handlePageChange(1)}
