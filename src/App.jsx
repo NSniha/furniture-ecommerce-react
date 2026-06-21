@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import {
   Navigate,
   Route,
   Routes,
+  useLocation,
 } from "react-router-dom";
 
 import SiteLayout from "./layouts/SiteLayout";
@@ -14,12 +16,32 @@ import Shop from "./pages/Shop/Shop";
 import ShopDetails from "./pages/ShopDetails/ShopDetails";
 import Contact from "./pages/Contact/Contact";
 
+/* ==================== Scroll to top on route change ==================== */
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, [pathname]);
+
+  return null;
+};
+
 const App = () => {
   return (
     <>
       {/* ==================== Dynamic browser page title ==================== */}
 
       <PageTitle />
+
+      {/* ==================== Page scroll reset ==================== */}
+
+      <ScrollToTop />
 
       {/* ==================== Website routes ==================== */}
 
