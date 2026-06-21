@@ -834,7 +834,7 @@ const ShopDetails = () => {
                     to={`/shop-details/${item.id}`}
                     className="block pt-[10px] text-[#151515] no-underline"
                   >
-                    <h3 className="m-0 text-[18px] font-bold uppercase leading-[1.2] tracking-[-0.035em] transition-colors duration-300 group-hover:text-[#6b665f] max-[640px]:text-[16px]">
+                    <h3 className="m-0 text-[16px] font-semibold uppercase leading-[1.2] tracking-[-0.035em] transition-colors duration-300 group-hover:text-[#6b665f] max-[640px]:text-[16px]">
                       {item.title}
                     </h3>
                   </Link>

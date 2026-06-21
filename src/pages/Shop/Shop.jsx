@@ -545,10 +545,10 @@ const Shop = () => {
           {/* ==================== Sale heading ==================== */}
 
           <div
-            className={`mx-auto text-center transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
+            className={`mx-auto text-center transition-all duration-[950ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
               saleVisible
                 ? "translate-y-0 opacity-100"
-                : "translate-y-[38px] opacity-0"
+                : "translate-y-[30px] opacity-0"
             }`}
           >
             <h2 className="m-0 font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-none tracking-[-0.055em] text-[#151515] max-[640px]:text-[clamp(44px,12vw,58px)]">
@@ -564,13 +564,13 @@ const Shop = () => {
                 key={product.id}
                 style={{
                   transitionDelay: saleVisible
-                    ? `${180 + index * 120}ms`
+                    ? `${160 + index * 110}ms`
                     : "0ms",
                 }}
-                className={`group transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
+                className={`group transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
                   saleVisible
                     ? "translate-y-0 opacity-100"
-                    : "translate-y-[42px] opacity-0"
+                    : "translate-y-[36px] opacity-0"
                 }`}
               >
                 <p className="mb-[12px] mt-0 text-[16px] font-medium leading-none tracking-[-0.035em] text-[#5e5e5e]">
@@ -596,7 +596,7 @@ const Shop = () => {
                 </div>
 
                 <div className="pt-[26px] max-[640px]:pt-[22px]">
-                  <p className="mb-[14px] mt-0 text-[16px] font-semibold leading-none tracking-[-0.035em] text-[#74746f] max-[640px]:text-[14px]">
+                  <p className="pb-[14px] mt-0 text-[16px] font-semibold leading-none tracking-[-0.035em] text-[#74746f] max-[640px]:text-[14px]">
                     {product.category}
                   </p>
 
@@ -609,7 +609,7 @@ const Shop = () => {
                     </h3>
                   </Link>
 
-                  <p className="m-0 mt-[26px] text-[28px] font-normal uppercase leading-none tracking-[-0.035em] text-[#ff0000] transition-transform duration-300 group-hover:translate-x-1 max-[640px]:mt-[22px] max-[640px]:text-[23px]">
+                  <p className="m-0 pt-[18px] text-[26px] font-semibold uppercase leading-none tracking-[-0.035em] text-[#8d1313] transition-transform duration-300 group-hover:translate-x-1 max-[640px]:mt-[22px] max-[640px]:text-[23px]">
                     {product.discount}
                   </p>
                 </div>
@@ -627,6 +627,8 @@ const Shop = () => {
         className="w-full bg-[#fafaf8] pb-[122px] pt-[112px] max-[1400px]:pb-[104px] max-[1400px]:pt-[96px] max-[1024px]:pb-[84px] max-[1024px]:pt-[78px] max-[640px]:pb-[66px] max-[640px]:pt-[62px]"
       >
         <div className="site-container">
+          {/* ==================== Section labels ==================== */}
+
           <div
             className={`flex items-center justify-between transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
               curatedVisible
@@ -643,9 +645,11 @@ const Shop = () => {
             </p>
           </div>
 
-          <div className="mt-[72px] grid grid-cols-[0.95fr_1.05fr] items-end gap-[90px] max-[1180px]:gap-[58px] max-[900px]:grid-cols-1 max-[900px]:gap-[42px] max-[640px]:mt-[50px]">
+          {/* ==================== Curated heading ==================== */}
+
+          <div className="mt-[72px] max-[640px]:mt-[50px]">
             <h2
-              className={`m-0 max-w-[700px] font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-[1.05] tracking-[-0.055em] text-[#151515] transition-all delay-[90ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[640px]:text-[clamp(44px,12vw,58px)] ${
+              className={`m-0 max-w-[735px] font-['Playfair_Display',serif] text-[clamp(68px,5.2vw,78px)] font-normal lowercase italic leading-[1.05] tracking-[-0.055em] text-[#151515] transition-all delay-[90ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[900px]:max-w-[680px] max-[640px]:text-[clamp(44px,12vw,58px)] ${
                 curatedVisible
                   ? "translate-x-0 opacity-100"
                   : "-translate-x-[36px] opacity-0"
@@ -659,45 +663,49 @@ const Shop = () => {
                 products
               </span>
             </h2>
-
-            <div
-              className={`flex flex-wrap items-center justify-end gap-x-[13px] gap-y-3 transition-all delay-[160ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[900px]:justify-start ${
-                curatedVisible
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-[30px] opacity-0"
-              }`}
-            >
-              {shopCategories.map((category, index) => {
-                const isActive =
-                  normalizeCategory(category) === normalizeCategory(activeCategory);
-
-                return (
-                  <div
-                    key={category}
-                    className="flex items-center gap-x-[13px]"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleCategoryChange(category)}
-                      className={`cursor-pointer border-0 bg-transparent p-0 font-['Inter',sans-serif] text-[13px] font-medium uppercase leading-none tracking-[-0.015em] transition-colors duration-300 max-[640px]:text-[12px] ${
-                        isActive
-                          ? "text-[#151515] underline decoration-[1.5px] underline-offset-[4px]"
-                          : "text-[#666666] hover:text-[#151515]"
-                      }`}
-                    >
-                      {category}
-                    </button>
-
-                    {index !== shopCategories.length - 1 && (
-                      <span className="text-[13px] font-medium leading-none text-[#666666]">
-                        /
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
           </div>
+
+          {/* ==================== Category filter navigation ==================== */}
+
+          <div
+            className={`mt-[68px] flex flex-wrap items-center justify-end gap-x-[13px] gap-y-3 transition-all delay-[160ms] duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-[1024px]:mt-[54px] max-[900px]:justify-start max-[640px]:mt-[42px] ${
+              curatedVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-[30px] opacity-0"
+            }`}
+          >
+            {shopCategories.map((category, index) => {
+              const isActive =
+                normalizeCategory(category) === normalizeCategory(activeCategory);
+
+              return (
+                <div
+                  key={category}
+                  className="flex items-center gap-x-[13px]"
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleCategoryChange(category)}
+                    className={`cursor-pointer border-0 bg-transparent p-0 font-['Inter',sans-serif] text-[13px] font-medium uppercase leading-none tracking-[-0.015em] transition-colors duration-300 max-[640px]:text-[12px] ${
+                      isActive
+                        ? "text-[#151515] underline decoration-[1.5px] underline-offset-[4px]"
+                        : "text-[#666666] hover:text-[#151515]"
+                    }`}
+                  >
+                    {category}
+                  </button>
+
+                  {index !== shopCategories.length - 1 && (
+                    <span className="text-[13px] font-medium leading-none text-[#666666]">
+                      /
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* ==================== Curated product grid ==================== */}
 
           <div
             key={`${normalizeCategory(activeCategory)}-${currentPage}`}
@@ -743,7 +751,7 @@ const Shop = () => {
                 </div>
 
                 <div className="pt-[22px]">
-                  <p className="mb-[12px] mt-0 font-['Inter',sans-serif] text-[13px] font-medium leading-none tracking-[-0.02em] text-[#74746f]">
+                  <p className="mb-[12px] mt-0 font-['Inter',sans-serif] text-[14px] font-medium leading-none tracking-[-0.02em] text-[#74746f]">
                     {product.category}
                   </p>
 
@@ -751,7 +759,7 @@ const Shop = () => {
                     to={`/shop-details/${product.id}`}
                     className="block w-fit text-inherit no-underline"
                   >
-                    <h3 className="m-0 font-['Inter',sans-serif] text-[13px] font-bold uppercase leading-[1.25] tracking-[-0.025em] text-[#151515] transition-colors duration-300 hover:text-[#6b665f]">
+                    <h3 className="m-0 font-['Inter',sans-serif] text-[16px] font-semibold uppercase leading-[1.25] tracking-[-0.015em] text-[#151515] transition-colors duration-300 hover:text-[#6b665f]">
                       {product.title}
                     </h3>
                   </Link>
@@ -771,6 +779,8 @@ const Shop = () => {
               </article>
             ))}
           </div>
+
+          {/* ==================== Product pagination ==================== */}
 
           <div
             className={`mt-[78px] flex items-center justify-center gap-[10px] transition-all delay-[260ms] duration-[900ms] ease-out max-[640px]:mt-[58px] ${

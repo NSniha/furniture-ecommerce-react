@@ -713,7 +713,7 @@ const Navbar = () => {
                 Decorist
               </p>
 
-              <h2 className="m-0 mt-2 text-[28px] font-medium uppercase leading-none tracking-[-0.045em] text-[#151515]">
+              <h2 className="m-0 pt-2 text-[22px] font-medium uppercase leading-none tracking-[-0.045em] text-[#151515]">
                 {isCartPopupOpen ? "Shopping Cart" : "Wishlist"}
               </h2>
             </div>
@@ -812,16 +812,16 @@ const Navbar = () => {
                 ) : (
                   <div className="flex min-h-[420px] flex-col items-center justify-center text-center">
                     <ShoppingCart
-                      size={48}
+                      size={42}
                       strokeWidth={1.3}
                       className="text-[#a8a49c]"
                     />
 
-                    <h3 className="m-0 mt-6 text-[24px] font-medium uppercase tracking-[-0.035em] text-[#151515]">
+                    <h3 className="m-0 pt-3 text-[18px] font-medium uppercase tracking-[-0.035em] text-[#151515]">
                       Cart is empty
                     </h3>
 
-                    <p className="m-0 mt-3 max-w-[280px] text-[14px] leading-[1.6] text-[#77736b]">
+                    <p className="m-0 pt-2 max-w-[280px] text-[14px] leading-[1.6] text-[#77736b]">
                       Add your favorite furniture and decor pieces to see them
                       here.
                     </p>
@@ -900,16 +900,16 @@ const Navbar = () => {
                 ) : (
                   <div className="flex min-h-[420px] flex-col items-center justify-center text-center">
                     <Heart
-                      size={48}
+                      size={42}
                       strokeWidth={1.3}
                       className="text-[#a8a49c]"
                     />
 
-                    <h3 className="m-0 mt-6 text-[24px] font-medium uppercase tracking-[-0.035em] text-[#151515]">
+                    <h3 className="m-0 pt-3 text-[18px] font-medium uppercase tracking-[-0.035em] text-[#151515]">
                       Wishlist is empty
                     </h3>
 
-                    <p className="m-0 mt-3 max-w-[280px] text-[14px] leading-[1.6] text-[#77736b]">
+                    <p className="m-0 pt-2 max-w-[280px] text-[14px] leading-[1.6] text-[#77736b]">
                       Save your favorite products and quickly find them later.
                     </p>
                   </div>
